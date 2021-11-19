@@ -32,7 +32,7 @@ function LandingPage() {
     }
     return (
         <header>
-            { loggedInd === "true" ? <Navigate  to='/Homepage' /> : '' }
+            { loggedInd ==="true"? <Navigate  to='/Homepage' /> : '' }
 
             <div className="row jstfyCntEnd wrapper">
                 <button className="initialBtnSettng specialBtn btnPurple" onClick={()=>modalWindow('logIn')}>Log in</button>

@@ -1,5 +1,14 @@
 nav ul {
     display: flex;
-    justify-content: end;
+    flex-direction: column;
+    align-items: flex-end;
     /* margin-top: 5px; */
+}
+.dropDown{
+    background-color: rgb(241, 244, 250);
+    min-width: 200px;
+    padding: 20px;
+    align-items: center;
+    border-radius: 5px;
+    box-shadow: 0 0 10px cornflowerblue;
 }

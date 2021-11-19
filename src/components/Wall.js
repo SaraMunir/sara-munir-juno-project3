@@ -4,7 +4,7 @@ function Wall() {
     return (
         <article className="wall">
             <div className="card">
-                <input type="text" />
+                <input type="text"/>
             </div>
             <div className="posts">
                 <div className="card">

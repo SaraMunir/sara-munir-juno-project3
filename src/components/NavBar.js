@@ -10,9 +10,16 @@ function NavBar() {
                 loggedInd ?
             <ul>
                 <li>
-                    <Link to="/profile"> <i className="fas fa-2x fa-user-circle"></i>
-                    </Link>
+                    {/* <Link to="/profile"> <i className="fas fa-2x fa-user-circle"></i>
+                    </Link> */}
+                    <button>
+                        <i className="fas fa-2x fa-user-circle"></i>
+                    </button>
                 </li>
+                <ul className='dropDown'>
+                    <li>Log out</li>
+
+                </ul>
             </ul>
             : null
             }

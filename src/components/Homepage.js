@@ -31,9 +31,7 @@ function Homepage() {
     }, [])
     return (
         <section className="wrapper row">
-            {/* { loggedInd === true ? <Navigate  to='/Homepage' /> : '' } */}
-
-            { loggedInd === "false" ?  <Navigate to='/Welcome'/> :  null}
+            { loggedInd === "false" ||  !loggedInd?  <Navigate to='/Welcome'/> :  null}
             <aside>
                 <div className="profile">
                     <div className="profileImg">
@@ -75,7 +73,6 @@ function Homepage() {
                             <img src="https://image.shutterstock.com/image-photo/portrait-mature-businessman-wearing-glasses-260nw-738242395.jpg" alt="a women" />
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTglCWa5kuVgNTrXD2NxCFZ82apQ-8UhJMVFg&usqp=CAU" alt="a women" />
                         </div>
-
                     </div>
                 </div>
             </aside>

@@ -1,5 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
-import { Navigate  } from 'react-router-dom';
+import loadingIcon from './assets/Bars-1s-200px.gif'
 
 import firebase from '../firebase';
 
@@ -67,9 +67,9 @@ function SignUp() {
             localStorage.setItem("loggedInd", true);
             localStorage.setItem("emailAddress", user.emailAddress);
             setUser({fullName: '', emailAddress: '', password: ''})
+            setIsLoggedIn(true); 
             setTimeout( function(){ 
-                setIsLoggedIn(true); 
-                // document.location.reload(true);
+                document.location.reload(true);
             }, 1000 );
         }
     }
@@ -88,51 +88,60 @@ function SignUp() {
     }, [])
 
     return (
-        
         <div className="modalCntr">
-            { isLoggedIn ? <Navigate  to='/Homepage' /> : '' }
-            <h2>Sign Up</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="inputCntr">
-                    <label htmlFor="fullName">Your Name</label>
-                    <input
-                    ref={inputName}
-                    type="text"  
-                    placeholder="Name" 
-                    id="fullName"
-                    onChange={handleInput}
-                    value={user.fullName}
-                    />
-                </div>
-                <div className="inputCntr">
-                    <label htmlFor="emailAddress">Email Address</label>
-                    <input type="text"  placeholder="Email Address" 
-                    ref={inputEmail}
-                    id="emailAddress"
-                    onChange={handleInput}
-                    value={user.emailAddress}
-                    />
-                </div>
-                <div className="inputCntr">
-                    <label htmlFor="password">Password</label>
-                    <input type="password"  placeholder="Enter Password" 
-                    ref={inputPassword}
-                    id="password"
-                    onChange={handleInput}
-                    value={user.password}
-                    />
-                </div>
-                { alert.show ? 
-                <div className="alertBox">
-                    <p>{alert.alertText}</p>
-                </div>
-                : null
-                }
+            {
+                isLoggedIn ?
+                <>
+                    <h2>Sign Up</h2>
+                    <img className="loadingIcon" src={loadingIcon} alt="loading icon" /> 
+                </>
+                :
+                <>
+                    <h2>Sign Up</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="inputCntr">
+                            <label htmlFor="fullName">Your Name</label>
+                            <input
+                            ref={inputName}
+                            type="text"  
+                            placeholder="Name" 
+                            id="fullName"
+                            onChange={handleInput}
+                            value={user.fullName}
+                            />
+                        </div>
+                        <div className="inputCntr">
+                            <label htmlFor="emailAddress">Email Address</label>
+                            <input type="text"  placeholder="Email Address" 
+                            ref={inputEmail}
+                            id="emailAddress"
+                            onChange={handleInput}
+                            value={user.emailAddress}
+                            />
+                        </div>
+                        <div className="inputCntr">
+                            <label htmlFor="password">Password</label>
+                            <input type="password"  placeholder="Enter Password" 
+                            ref={inputPassword}
+                            id="password"
+                            onChange={handleInput}
+                            value={user.password}
+                            />
+                        </div>
+                        { alert.show ? 
+                        <div className="alertBox">
+                            <p>{alert.alertText}</p>
+                        </div>
+                        : null
+                        }
+                        <div className="row jstfyCntCenter">
+                            <button className="initialBtnSettng submitBtn">Create Account</button>
+                        </div>
+                    </form>
                 
-                <div className="row jstfyCntCenter">
-                    <button className="initialBtnSettng submitBtn">Create Account</button>
-                </div>
-            </form>
+                </>
+
+            }
         </div>
     )
 }

@@ -132,6 +132,13 @@ button {
   margin: 0;
   font-weight: 600;
 }
+/* loading icon */
+.loadingIcon{
+  width: 150px;
+  width: 150px;
+  object-fit: contain;
+  margin: 0 auto;
+}
 
 
 
