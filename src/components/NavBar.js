@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useLocation, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import './styles/NavStyle.css'
 const loggedInd = localStorage.loggedInd
 

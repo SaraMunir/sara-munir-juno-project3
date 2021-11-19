@@ -1,5 +1,3 @@
-import firebase from './firebase.js'
-
 import './App.css';
 import React from "react";
 import {   BrowserRouter,
