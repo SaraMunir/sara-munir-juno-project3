@@ -1,0 +1,77 @@
+
+header {
+    min-height: 88vh;
+    /* position: relative; */
+}
+.wrapper {
+    width: 80%;
+    margin: 0 auto;
+}
+.heroText{
+    width: 50%;
+    /* padding: 50px; */
+}
+.heroText h1 {
+    margin: 30px 0;
+    /* font-family: 'Abril Fatface', cursive; */
+    text-transform: uppercase;
+    font-family: 'Julius Sans One', sans-serif;
+    font-size: 5rem;
+    color: #5b2dff;
+    text-shadow: 15px 10px 0px #ff9f00 ;
+    /* color: #ff9f00;
+    color: #8a80e0;
+    color: #1b061c; */
+}
+.logo {
+    font-family: 'Julius Sans One', sans-serif;
+    font-size: 3rem;
+    color: #5b2dff;
+    text-shadow: 15px 10px 0px #ff9f00 ;
+    margin: 0 auto;
+
+}
+
+
+.modalWindow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #1b061cd2;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.modalWindowCntr {
+    background: white;
+    width: 40%;
+    min-height: 65vh;
+    margin: 0 auto;
+    border-radius: 10px;
+    text-align: center;
+    padding: 50px;
+    position: relative;
+}
+
+.modalCloseBtn{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+.heroText p {
+    width: 90%;
+    font-size: 1.7rem;
+}
+.heroImg{
+    width: 50%;
+    object-fit: cover;
+}
+
+

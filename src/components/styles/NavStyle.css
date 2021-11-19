@@ -1,0 +1,5 @@
+nav ul {
+    display: flex;
+    justify-content: end;
+    /* margin-top: 5px; */
+}
