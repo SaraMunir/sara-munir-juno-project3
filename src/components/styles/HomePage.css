@@ -90,3 +90,26 @@ aside {
     margin: 5px auto;
 
 }
+.postBtn{
+    background: #8a80e0;
+    padding: 8px 20px;
+    font-size: .9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: .3s;
+}
+.postForm textarea {
+    max-width: calc(100% - 20px);
+    min-width: calc(100% - 20px);
+    margin: 10px auto;
+    border: 1px solid rgba(201, 201, 201, 0.418);
+    background: #e0e0e9;
+    border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+}
+.postForm textarea:active, .postForm textarea:focus {
+    background: rgb(255, 255, 255);
+    border: #5b2dff;
+}

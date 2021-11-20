@@ -1,28 +1,42 @@
-import React from 'react'
+import {useState} from 'react'
 import { Link } from "react-router-dom";
 import './styles/NavStyle.css'
 const loggedInd = localStorage.loggedInd
 
 function NavBar() {
+    const [menuBtn, setMenuBtn]=useState(false)
+    const logOut = ()=>{
+        localStorage.clear();
+        document.location.reload(true)
+    }
+    const showMenu = ()=>{
+        setMenuBtn(!menuBtn)
+    }
     return (
         <nav className="wrapper">
+            <form action="" className='searchInput'>
+                <input type="text" />
+                <button><i className="fas fa-search"></i></button>
+            </form>
             {
                 loggedInd ?
-            <ul>
-                <li>
-                    {/* <Link to="/profile"> <i className="fas fa-2x fa-user-circle"></i>
-                    </Link> */}
-                    <button>
-                        <i className="fas fa-2x fa-user-circle"></i>
+                <div>
+                    <button onClick={showMenu} className="profileMenuBtn">
+                        <i className="profileIcon fas fa-2x fa-user-circle"></i>
                     </button>
-                </li>
-                <ul className='dropDown'>
-                    <li>Log out</li>
-
-                </ul>
-            </ul>
+                    {
+                        menuBtn ?
+                        <ul className='dropDown'>
+                            <li><button>Notification</button></li>
+                            <li><button>Settings</button></li>
+                            <li><button onClick={logOut}>Log Out <i className="fas fa-sign-out-alt"></i></button></li>
+                        </ul> 
+                        : null
+                    }
+                </div>
             : null
             }
+
         </nav>
     )
 }

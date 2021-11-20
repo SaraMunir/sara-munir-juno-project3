@@ -5,7 +5,7 @@ import firebase from '../firebase';
 
 function SignUp() {
     const [user, setUser] = useState({
-        fullName: '', emailAddress: '', password: ''
+        fullName: '', emailAddress: '', password: '', posts: []
     })
     const [users, setUsers] = useState([])
     const [alert, setAlert] = useState({
@@ -19,7 +19,6 @@ function SignUp() {
 
     const handleInput = (e)=>{
         const { id, value } = e.target;
-
         setUser({...user, [id]: value})
     }
     const handleSubmit = (event) => {
