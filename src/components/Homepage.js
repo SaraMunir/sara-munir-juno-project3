@@ -1,15 +1,16 @@
 import {useState, useEffect} from 'react';
 import { Navigate  } from 'react-router-dom';
 import firebase from '../firebase';
-import moment from 'moment'
-// import userDefaultImage from './assets/user.png'
 import userDefaultImage from './assets/IMG_2900_lowRes.jpg'
 import PostCards from './PostCards';
 import './styles/HomePage.css'
 import BioEdit from './BioEdit';
+import ReadPost from './ReadPost';
 const usersEmail = localStorage.emailAddress;
 const loggedInd = localStorage.loggedInd;
-let userId = ''
+let userId = '';
+let selectedPostId;
+
 function Homepage() {
     const [user, setUser] = useState({})
     const [usersPost, setUsersPost] = useState({});
@@ -18,6 +19,7 @@ function Homepage() {
     });
     const [homeModal, setHomeModal] = useState(false)
     const [bioScreen, setBioScreen] = useState(false)
+    const [readMore, setReadMore] = useState(false)
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -52,6 +54,12 @@ function Homepage() {
         setHomeModal(!homeModal)
         if (type === "editBio"){
             setBioScreen(true)
+            setReadMore(false)
+        }
+        if (type === "readMore"){
+            setReadMore(true)
+            setBioScreen(false)
+            selectedPostId = id
         }
     }
 
@@ -110,6 +118,7 @@ function Homepage() {
                         <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                     </div>
                     {bioScreen ? <BioEdit/> : null}
+                    {readMore ? <ReadPost postId={selectedPostId}/> : null}
                 </div>
             </div> : null
             }
