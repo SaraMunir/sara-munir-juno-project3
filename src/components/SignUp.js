@@ -5,7 +5,7 @@ import firebase from '../firebase';
 
 function SignUp() {
     const [user, setUser] = useState({
-        fullName: '', emailAddress: '', password: '', posts: []
+        fullName: '', emailAddress: '', password: '', dataType: 'userAccounts'
     })
     const [users, setUsers] = useState([])
     const [alert, setAlert] = useState({
@@ -23,7 +23,6 @@ function SignUp() {
     }
     const handleSubmit = (event) => {
         event.preventDefault();
-
         // check if users email already exists in data base. 
         let doesEmailExist = false;
         users.forEach(eachUser=>{
@@ -65,7 +64,7 @@ function SignUp() {
             // we save the
             localStorage.setItem("loggedInd", true);
             localStorage.setItem("emailAddress", user.emailAddress);
-            setUser({fullName: '', emailAddress: '', password: ''})
+            setUser({...user, fullName: '', emailAddress: '', password: ''})
             setIsLoggedIn(true); 
             setTimeout( function(){ 
                 document.location.reload(true);

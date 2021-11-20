@@ -37,32 +37,37 @@ function Login() {
         }
         let userFound = false
         // find user from the users object by email and then check if password match. 
-        users.forEach(eachUser=>{
-            if (eachUser.emailAddress === user.emailAddress){
-                userFound = true
-                // if user email matches check if password matches
-                if (eachUser.password === user.password){
-                    // if password matches print out alert
-                    setAlert( { show: true, alertText: 'Success loggin In' } );
-                    // log in user state and redirect to homepage
-                    localStorage.setItem("loggedInd", true);
-                    localStorage.setItem("emailAddress", user.emailAddress)
-                    setUser({ emailAddress: '', password: ''})
-                    setIsLoggedIn(true); 
-                    setTimeout( function(){ 
-                        document.location.reload(true);
-                    }, 1500 );
-                }else {
-                    // if password doesnt match print out alert
-                    setAlert( { show: true, alertText: 'Password inccorrect' } );
-                    return
+        console.log('users: ', users)
+        if (user.lengt>0){
+            users.forEach(eachUser=>{
+                if (eachUser.emailAddress === user.emailAddress){
+                    userFound = true
+                    // if user email matches check if password matches
+                    if (eachUser.password === user.password){
+                        // if password matches print out alert
+                        setAlert( { show: true, alertText: 'Success loggin In' } );
+                        // log in user state and redirect to homepage
+                        localStorage.setItem("loggedInd", true);
+                        localStorage.setItem("emailAddress", user.emailAddress)
+                        setUser({ emailAddress: '', password: ''})
+                        setIsLoggedIn(true); 
+                        setTimeout( function(){ 
+                            document.location.reload(true);
+                        }, 1500 );
+                    }else {
+                        // if password doesnt match print out alert
+                        setAlert( { show: true, alertText: 'Password inccorrect' } );
+                        return
+                    }
+                } 
+                if (userFound === false){
+                    console.log('user not found');
+                    setAlert( { show: true, alertText: 'Sorry no user associated with this email address. please signup' } );
                 }
-            } 
-            if (userFound === false){
-                console.log('user not found');
-                setAlert( { show: true, alertText: 'Sorry no user associated with this email address. please signup' } );
-            }
-        })
+            })
+        }else {
+            setAlert( { show: true, alertText: 'Sorry no user associated with this email address found. please signup?' } );
+        }
 
     }
     useEffect(() => {

@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import { Navigate  } from 'react-router-dom';
 import firebase from '../firebase';
+import moment from 'moment'
 // import userDefaultImage from './assets/user.png'
 import userDefaultImage from './assets/IMG_2900_lowRes.jpg'
 import PostCards from './PostCards';
@@ -23,21 +24,22 @@ function Homepage() {
         e.preventDefault();
         const dbRef = firebase.database().ref();
         // creating time stamps:
-        let currentDate = new Date();
+        const currentDate = new Date();
         const dateTime ={ 
             date: currentDate.getDate(),
-            month: currentDate.getMonth()+1,
+            month: currentDate.getMonth(),
             year: currentDate.getFullYear(),
             hours: currentDate.getHours(), 
             minutes: currentDate.getMinutes(),
             }
+
         //  creating the post as an object with users id so that i can pull data based on the id
         const postObject ={
+            dataType: 'userPost',
             userId: userId,
             posts: post.postText, 
             timeStamp: dateTime
         }
-        console.log()
         dbRef.push(postObject);
         setPost({postText: ''})
     }
@@ -51,7 +53,6 @@ function Homepage() {
                 const newObje = {...data[key], id: key}
                 dataArray.push(newObje)
             }
-            const usersPostArray = []
             // getting data only for the user
             dataArray.forEach(user=>{
                 if(user.emailAddress === usersEmail){
@@ -59,13 +60,34 @@ function Homepage() {
                     setUser(user);
                 }
             })
+            const usersPostArray = []
+            // getting data for users posts
             dataArray.forEach(obj=>{
-                if(userId === obj.userId){
-                    console.log('in homepage: ', obj)
-                    usersPostArray.push(obj)
+                //  first get data that has the type of userPost
+                if(obj.dataType ==='userPost'){
+                    // is the posts userid is equal to user's userid then push the object to the posts array
+                    if(userId === obj.userId){
+                        usersPostArray.push(obj)
+                    }
                 }
             })
-            setUsersPost(usersPostArray)
+            console.log(usersPostArray)
+            // the sort the array by posting order 
+            const sortedArr = usersPostArray.sort((a,b)=>{
+                let A = a.timeStamp
+                let B = b.timeStamp
+                if(A.year > B.year) return -1
+                if(A.year < B.year) return 1
+                if(A.month > B.month) return -1
+                if(A.month < B.month) return 1
+                if(A.date > B.date) return -1
+                if(A.date < B.date) return 1
+                if(A.hours > B.hours) return -1
+                if(A.hours < B.hours) return 1
+                if(A.minutes > B.minutes) return -1
+                if(A.minutes < B.minutes) return 1
+            })
+            setUsersPost(sortedArr)
         })
     }, [])
     return (
@@ -149,7 +171,7 @@ function Homepage() {
                 
                 { usersPost.length>0 ?
                 usersPost.map(post=>
-                    <PostCards post={post}/>
+                    <PostCards key={post.id} post={post}/>
                 ) : <div className="card">
                 <p>Share your first post</p>
                     <div className="likeStuf">

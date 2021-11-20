@@ -1,26 +1,26 @@
-import {useEffect} from 'react'
-
+import {useEffect, useState} from 'react'
 function PostCards(props) {
+    const[postTime, setPostTime] = useState({})
     const month= ["January","February","March","April","May","June","July",
         "August","September","October","November","December"];
-    useEffect(() => {
-        console.log(props.post)
-        const post = props.post
-        /* 
-        date: 19
-        hours: 19
-        minutes: 16
-        month: 11
-        year: 2021
-        */
-        if(post.timeStamp){
-            console.log('')
-        }
+    const daysInWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+    useEffect(() => {
+        const post = props.post
+        if(post.timeStamp){
+            setPostTime(post.timeStamp)
+        }
     }, [])
     return (
         <div className="card">
             <p>{props.post.posts}</p>
+                {
+                    postTime == {} ? null
+            : 
+            <p className="postedTime">
+                {postTime.date} {month[postTime.month]}, {postTime.year} at {postTime.hours}:{postTime.minutes}
+            </p> 
+                }
             <div className="likeStuf">
                 <button><i className="far fa-heart"></i></button>
             </div>
