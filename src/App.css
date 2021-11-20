@@ -75,6 +75,14 @@ input:focus {
 
 
 /* button styling */
+.deleteBtn{
+  font-size: 1.1rem;
+  color: #c9c9c9;
+  cursor: pointer;
+}
+.deleteBtn:hover, .deleteBtn:focus {
+  color: #616161;
+}
 button {
   border: none;
   background: none;

@@ -90,6 +90,21 @@ aside {
     margin: 5px auto;
 
 }
+.posts {
+    display: grid;
+    /* flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between; */
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+.posts .card {
+    /* width: 26%; */
+    margin: 0;
+}
+.postContent{
+    /* min-height: 80px; */
+}
 .postBtn{
     background: #8a80e0;
     padding: 8px 20px;
@@ -115,5 +130,18 @@ aside {
 }
 
 .postedTime{
-    font-size: .9rem;
+    font-size: .8rem;
+    color: #5b2dff;
+    font-family: 'Julius Sans One', sans-serif;
+    font-style: italic;
+
+}
+.readMore{
+    font-family: 'Montserrat', sans-serif;
+    color: #ff9f00;
+    cursor: pointer;
+    font-style: italic;
+}
+.readMore:hover {
+
 }

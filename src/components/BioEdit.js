@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Profile() {
+function BioEdit() {
     return (
         <div>
-            
+            Bio stuff
         </div>
     )
 }
 
-export default Profile
+export default BioEdit

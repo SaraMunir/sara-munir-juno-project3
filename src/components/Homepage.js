@@ -6,6 +6,7 @@ import moment from 'moment'
 import userDefaultImage from './assets/IMG_2900_lowRes.jpg'
 import PostCards from './PostCards';
 import './styles/HomePage.css'
+import BioEdit from './BioEdit';
 const usersEmail = localStorage.emailAddress;
 const loggedInd = localStorage.loggedInd;
 let userId = ''
@@ -15,6 +16,8 @@ function Homepage() {
     const [post, setPost] = useState({
         postText: ''
     });
+    const [homeModal, setHomeModal] = useState(false)
+    const [bioScreen, setBioScreen] = useState(false)
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -42,6 +45,14 @@ function Homepage() {
         }
         dbRef.push(postObject);
         setPost({postText: ''})
+    }
+    // oppening modal window
+    const modalWindow =(type, id)=>{
+        console.log(type)
+        setHomeModal(!homeModal)
+        if (type === "editBio"){
+            setBioScreen(true)
+        }
     }
 
     useEffect(() => {
@@ -71,7 +82,7 @@ function Homepage() {
                     }
                 }
             })
-            console.log(usersPostArray)
+            // console.log(usersPostArray)
             // the sort the array by posting order 
             const sortedArr = usersPostArray.sort((a,b)=>{
                 let A = a.timeStamp
@@ -92,6 +103,16 @@ function Homepage() {
     }, [])
     return (
         <section className="wrapper row">
+            {homeModal?
+            <div className="modalWindow">
+                <div className="modalWindowCntr">
+                    <div className="row jstfyCntEnd">
+                        <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
+                    </div>
+                    {bioScreen ? <BioEdit/> : null}
+                </div>
+            </div> : null
+            }
             { loggedInd === "false" ||  !loggedInd?  <Navigate to='/Welcome'/> :  null}
             <aside>
                 <div className="profile">
@@ -100,7 +121,7 @@ function Homepage() {
                         <h2 className="userName">{user.fullName}</h2>
                     </div>
                     <div className="card">
-                        <button className="editBtn"><i className="fas fa-user-edit"></i></button>
+                        <button className="editBtn" onClick={()=>modalWindow('editBio')}><i className="fas fa-user-edit"></i></button>
                         <h2>Bio</h2>
                         <hr />
                         <p className="bioText">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam voluptates fugiat quas, quidem explicabo quia accusantium illum corrupti quod omnis ab aliquam, expedita animi, alias in tenetur totam officiis quisquam!</p>
@@ -171,8 +192,9 @@ function Homepage() {
                 
                 { usersPost.length>0 ?
                 usersPost.map(post=>
-                    <PostCards key={post.id} post={post}/>
-                ) : <div className="card">
+                    <PostCards key={post.id} post={post} modalWindow={modalWindow}/>
+                ) : 
+                <div className="card">
                 <p>Share your first post</p>
                     <div className="likeStuf">
                         <button><i className="far fa-heart"></i></button>
