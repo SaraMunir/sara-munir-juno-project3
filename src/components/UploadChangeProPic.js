@@ -16,6 +16,7 @@ function UploadChangeProPic(props) {
         setUploadBtn(true)
     }
     const handleUploadImg = async (e)=>{
+        // providing each images a unique id
         const id = uuidv4();
         const file = imgObj;
         // const storageRef = firebase.storage().ref();

@@ -1,7 +1,6 @@
 import {useState, useEffect} from 'react';
 import { Navigate  } from 'react-router-dom';
 import firebase from '../firebase';
-import userDefaultImage from './assets/IMG_2900_lowRes.jpg'
 import PostCards from './PostCards';
 import './styles/HomePage.css'
 import BioEdit from './BioEdit';
@@ -131,7 +130,7 @@ function Homepage() {
                     <div className="row jstfyCntEnd">
                         <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                     </div>
-                    {bioScreen ? <BioEdit user = {user}/> : null}
+                    {bioScreen ? <BioEdit user = {user} modalWindow={modalWindow}/> : null}
                     {readMore ? <ReadPost postId={selectedPostId}/> : null}
                     {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
                 </div>
@@ -153,22 +152,22 @@ function Homepage() {
                         <button className="editBtn" onClick={()=>modalWindow('editBio')}><i className="fas fa-user-edit"></i></button>
                         <h2>Bio</h2>
                         <hr />
-                        <p className="bioText">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Numquam voluptates fugiat quas, quidem explicabo quia accusantium illum corrupti quod omnis ab aliquam, expedita animi, alias in tenetur totam officiis quisquam!</p>
+                        <p className="bioText">{user.bio?user.bio : 'no bio provided yet'}</p>
                         <div className="bioContainer">
                             <i className="fas fa-birthday-cake"></i>
-                            <p>Birthday Not Provided</p>
+                            <p>{user.birthday ? user.birthday : 'no birthday provided yet'}</p>
                         </div>
                         <div className="bioContainer">
                             <i className="fas fa-map-marked-alt"></i>
-                            <p>Location Not Provided</p>
+                            <p>{user.location ? user.location : 'no location provided yet'}</p>
                         </div>
                         <div className="bioContainer">
                             <i className="fas fa-user-graduate"></i>
-                            <p>Education Not Provided</p>
+                            <p>{user.education ? user.education : 'no education provided yet'}</p>
                         </div>
                         <div className="bioContainer">
                             <i className="fas fa-briefcase"></i>
-                            <p>Job Not Provided</p>
+                            <p>{user.occupation ? user.occupation : 'no occupation provided yet'}</p>
                         </div>
                     </div>
                     <div className="card">
