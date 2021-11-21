@@ -1,6 +1,6 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
-
+import'firebase/storage';
 const firebaseConfig = {
     apiKey: "AIzaSyAV2Ce5BM7k1TlB9GOEp9o9kwHOpuhJPvI",
     authDomain: "junobootcamppro3.firebaseapp.com",

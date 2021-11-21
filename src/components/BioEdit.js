@@ -1,9 +1,11 @@
-import React from 'react'
+import {useState} from 'react'
 
 function BioEdit() {
+
     return (
         <div>
-            Bio stuff
+            <h2>form</h2>
+            <form action=""></form>
         </div>
     )
 }

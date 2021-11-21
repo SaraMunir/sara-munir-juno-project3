@@ -6,6 +6,7 @@ import PostCards from './PostCards';
 import './styles/HomePage.css'
 import BioEdit from './BioEdit';
 import ReadPost from './ReadPost';
+import UploadChangeProPic from './UploadChangeProPic';
 const usersEmail = localStorage.emailAddress;
 const loggedInd = localStorage.loggedInd;
 let userId = '';
@@ -20,6 +21,7 @@ function Homepage() {
     const [homeModal, setHomeModal] = useState(false)
     const [bioScreen, setBioScreen] = useState(false)
     const [readMore, setReadMore] = useState(false)
+    const [uploadPic, setUploadPic] = useState(false)
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -50,14 +52,21 @@ function Homepage() {
     }
     // oppening modal window
     const modalWindow =(type, id)=>{
-        console.log(type)
         setHomeModal(!homeModal)
         if (type === "editBio"){
             setBioScreen(true)
             setReadMore(false)
+            setUploadPic(false)
         }
         if (type === "readMore"){
             setReadMore(true)
+            setBioScreen(false)
+            setUploadPic(false)
+            selectedPostId = id
+        }
+        if (type === "editProPic"){
+            setUploadPic(true)
+            setReadMore(false)
             setBioScreen(false)
             selectedPostId = id
         }
@@ -72,7 +81,7 @@ function Homepage() {
                 const newObje = {...data[key], id: key}
                 dataArray.push(newObje)
             }
-            // getting data only for the user
+            // getting data only for the user from the email address that's stored in the local storage
             dataArray.forEach(user=>{
                 if(user.emailAddress === usersEmail){
                     userId = user.id
@@ -108,6 +117,8 @@ function Homepage() {
             })
             setUsersPost(sortedArr)
         })
+        
+        
     }, [])
     return (
         <section className="wrapper row">
@@ -119,6 +130,7 @@ function Homepage() {
                     </div>
                     {bioScreen ? <BioEdit/> : null}
                     {readMore ? <ReadPost postId={selectedPostId}/> : null}
+                    {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
                 </div>
             </div> : null
             }
@@ -126,7 +138,12 @@ function Homepage() {
             <aside>
                 <div className="profile">
                     <div className="profileImg">
-                        <img src={userDefaultImage} alt="default avatar" />
+                        <div className="profileImgCntr" onClick={()=>modalWindow('editProPic')}>
+                            <button className="editBtn" ><i className="fas fa-camera-retro"></i></button>
+                            <img src={
+                                user.profileImg ? user.profileImg.imageUrl :
+                                'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt={user.profileImg ? `profile photo of ${user.fullName}` : 'default image'}/>
+                        </div>
                         <h2 className="userName">{user.fullName}</h2>
                     </div>
                     <div className="card">

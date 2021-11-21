@@ -5,17 +5,15 @@ function PostCards(props) {
     const[postTime, setPostTime] = useState({})
     const month= ["January","February","March","April","May","June","July",
         "August","September","October","November","December"];
-
         const deletePost=(id)=>{
-            console.log(id)
+            // console.log(id)
             const dbRef = firebase.database().ref();
-
             const something= dbRef.child(id).remove()
-            console.log("something: ", something)
-
+            // console.log("something: ", something)
         }
 
     useEffect(() => {
+        // rendering time of the post
         const post = props.post
         if(post.timeStamp){
             setPostTime(post.timeStamp)
