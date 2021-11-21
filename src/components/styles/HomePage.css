@@ -143,6 +143,10 @@ aside {
     cursor: pointer;
     transition: .3s;
 }
+.postBtnGrey {
+    background: #8d8c99;
+    color: #414047;
+}
 .postForm textarea {
     max-width: calc(100% - 20px);
     min-width: calc(100% - 20px);

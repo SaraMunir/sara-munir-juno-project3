@@ -38,7 +38,7 @@ function Login() {
         let userFound = false
         // find user from the users object by email and then check if password match. 
         console.log('users: ', users)
-        if (user.lengt>0){
+        if (users.length>0){
             users.forEach(eachUser=>{
                 if (eachUser.emailAddress === user.emailAddress){
                     userFound = true

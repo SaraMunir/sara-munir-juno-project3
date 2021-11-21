@@ -29,26 +29,29 @@ function Homepage() {
     // submitting the post
     const postPost = (e)=>{
         e.preventDefault();
-        const dbRef = firebase.database().ref();
-        // creating time stamps:
-        const currentDate = new Date();
-        const dateTime ={ 
-            date: currentDate.getDate(),
-            month: currentDate.getMonth(),
-            year: currentDate.getFullYear(),
-            hours: currentDate.getHours(), 
-            minutes: currentDate.getMinutes(),
+        if(post.postText){
+            const dbRef = firebase.database().ref();
+            // creating time stamps:
+            const currentDate = new Date();
+            const dateTime ={ 
+                date: currentDate.getDate(),
+                month: currentDate.getMonth(),
+                year: currentDate.getFullYear(),
+                hours: currentDate.getHours(), 
+                minutes: currentDate.getMinutes(),
+                }
+    
+            //  creating the post as an object with users id so that i can pull data based on the id
+            const postObject ={
+                dataType: 'userPost',
+                userId: userId,
+                posts: post.postText, 
+                timeStamp: dateTime
             }
+            dbRef.push(postObject);
+            setPost({postText: ''})
 
-        //  creating the post as an object with users id so that i can pull data based on the id
-        const postObject ={
-            dataType: 'userPost',
-            userId: userId,
-            posts: post.postText, 
-            timeStamp: dateTime
         }
-        dbRef.push(postObject);
-        setPost({postText: ''})
     }
     // oppening modal window
     const modalWindow =(type, id)=>{
@@ -128,7 +131,7 @@ function Homepage() {
                     <div className="row jstfyCntEnd">
                         <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                     </div>
-                    {bioScreen ? <BioEdit/> : null}
+                    {bioScreen ? <BioEdit user = {user}/> : null}
                     {readMore ? <ReadPost postId={selectedPostId}/> : null}
                     {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
                 </div>
@@ -211,7 +214,7 @@ function Homepage() {
                 >
                 </textarea>
                 <div className="row jstfyCntEnd">
-                    <button className="postBtn">post</button>
+                    <button className={post.postText ? "postBtn" : "postBtn postBtnGrey" }>post</button>
                 </div>
             </form>
             <div className="posts">

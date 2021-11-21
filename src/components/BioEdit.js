@@ -1,10 +1,10 @@
 import {useState} from 'react'
 
-function BioEdit() {
+function BioEdit(props) {
 
     return (
         <div>
-            <h2>form</h2>
+            <h2>bio</h2>
             <form action=""></form>
         </div>
     )
