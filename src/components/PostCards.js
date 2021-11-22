@@ -5,12 +5,15 @@ function PostCards(props) {
     const[postTime, setPostTime] = useState({})
     const month= ["January","February","March","April","May","June","July",
         "August","September","October","November","December"];
-        const deletePost=(id)=>{
-            // console.log(id)
-            const dbRef = firebase.database().ref();
-            const something= dbRef.child(id).remove()
-            // console.log("something: ", something)
-        }
+    const deletePost=(id)=>{
+        // console.log(id)
+        const dbRef = firebase.database().ref();
+        const something= dbRef.child(id).remove()
+        // console.log("something: ", something)
+    }
+    const likePost=(id)=>{
+        console.log('id')
+    }
 
     useEffect(() => {
         // rendering time of the post
@@ -21,9 +24,13 @@ function PostCards(props) {
     }, [])
     return (
         <div className="card">
+            {
+                props.userType === 'user' ?
             <div className="row jstfyCntEnd">
                 <button className="deleteBtn" onClick={()=>deletePost(props.post.id)}><i className="fas fa-times"></i></button>
-            </div>
+            </div> 
+            : null
+            }
             {
             postTime == {} ? null
             : 
@@ -42,7 +49,7 @@ function PostCards(props) {
             {/* redering posted time */}
 
             <div className="likeStuf">
-                <button className="likeBtn"><i className="far fa-heart"></i></button>
+                <button className="likeBtn" onClick={()=>likePost(props.post.id)}><i className="far fa-heart"></i></button>
             </div>
         </div>
     )

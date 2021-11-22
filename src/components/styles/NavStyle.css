@@ -1,14 +1,26 @@
 nav {
+    
+    /* margin-top: 5px; */
+}
+li {
+    list-style: none;
+}
+.navContainer{
     display: flex;
     flex-direction: row;
     align-items: center;
     position: relative;
     justify-content: space-between;
     padding: 10px;
-    /* margin-top: 5px; */
+    position: relative;
 }
-li {
-    list-style: none;
+
+.searchThmb{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 .profileMenuBtn {
     font-size: 1.3rem;
@@ -28,7 +40,7 @@ li {
     box-shadow: 0 0 10px rgba(59, 87, 141, 0.74);
     position: absolute;
     z-index: 20;
-    top: 35 px;
+    top: 58px;
     right: 0;
     transition: .2s;
 }
@@ -48,6 +60,10 @@ li {
     background-color: #5b2dff;
     color: #eee9ff;
 }
+.searchCntr{
+    position: absolute;
+    z-index: 100;
+}
 .searchInput input{
     width: 25px;
     border-radius: 50px;
@@ -56,11 +72,14 @@ li {
     transition: .5s;
 }
 .searchInput:active input, .searchInput:focus input, .searchInput:hover input{
-    width: 200px;
+    width: 250px;
 }
 /* .searchInput  input::placeholder {
     place-content: ;
 } */
+.searchWidth input {
+    width: 250px;
+}
 .searchInput {
     position: relative;
     display: flex;
@@ -76,4 +95,20 @@ li {
     right: 10px;
     color: #9378f5;
 
+}
+.searchLink{
+    width: 232px;
+    padding: 10px 20px;
+    background-color: white;
+    border: 1px solid #cfc4f7;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px;
+}
+.searchLink:hover, .searchLink:focus {
+    background-color: #cfc4f7;
+}
+.searchLink a {
+    
 }

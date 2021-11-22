@@ -7,7 +7,6 @@ function ReadPost(props) {
         const dbRef = firebase.database().ref();
         dbRef.child(props.postId).on('value', (response)=>{
             const data = response.val()
-            console.log(data)
             setPostObj({...data, id: props.postId})
         })
 

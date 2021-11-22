@@ -71,9 +71,6 @@ input:focus {
   display: flex;
   flex-direction: column;
 }
-
-
-
 /* button styling */
 .deleteBtn{
   font-size: 1.1rem;
@@ -95,8 +92,11 @@ button {
   border-radius: 50px;
   font-weight: 600;
   transition: .3s;
-
 }
+aside {
+  position: relative;
+}
+
 
 .specialBtn {
   /* filter: drop-shadow(3px 3px 5px #4e340ad8); */
@@ -145,6 +145,23 @@ button {
   width: 150px;
   object-fit: contain;
   margin: 0 auto;
+}
+
+
+
+.followBtn{
+  padding: 10px 20px;
+  position: absolute;
+  background: #ff9f00;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  z-index: 80;
+  font-weight: 600;
+  min-width: 100px;
+  right: 0;
+
 }
 
 

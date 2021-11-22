@@ -6,6 +6,7 @@ import {   BrowserRouter,
 import LandingPage from './components/LandingPage';
 import NavBar from './components/NavBar';
 import Homepage from './components/Homepage.js';
+import UserProfile from './components/UserProfile';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route exact path='/' element={<LandingPage/>}/>
           <Route exact path='/Welcome' element={<LandingPage/>}/>
           <Route path='/Homepage' element={<Homepage/>}/>
+          <Route exact path='/userProfile/:userName/:userId' element={<UserProfile/>}/>
         </Routes>
       </BrowserRouter>
     </div>

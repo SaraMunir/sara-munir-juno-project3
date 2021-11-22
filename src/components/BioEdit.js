@@ -79,7 +79,7 @@ function BioEdit(props) {
                             value={usersObj.occupation} onChange={handleOnChange}
                             />
                         </div>
-                        <button>submit</button>
+                        <button className="postBtn">submit</button>
                     </form>
                 </>
             }
