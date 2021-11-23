@@ -8,13 +8,20 @@ import ReadPost from './ReadPost';
 let selectedPostId;
 
 function UserProfile(props) {
+    const visitorId = localStorage.loggedUserId;
+    const email = localStorage.emailAddress;
     const { userName } = useParams();
     const { userId } = useParams();
     const [user, setUser]= useState({});
+    const [visitor, setVisitor]= useState({});
     // const [profielType, setProfileType]=useState('visitor');
     const [usersPost, setUserPost]=useState([]);
-    const [homeModal, setHomeModal] = useState(false)
-    const [readMore, setReadMore] = useState(false)
+    const [homeModal, setHomeModal] = useState(false);
+    const [readMore, setReadMore] = useState(false);
+    const [isPersonFollowingUser, setIsPersonFollowingUser] = useState(false);
+    const [usersFollowers,setUsersFollowers] = useState([])
+    const [usersFollowings,setUsersFollowings] = useState([])
+
 
     const [post, setPost] = useState({
         postText: ''
@@ -24,14 +31,10 @@ function UserProfile(props) {
         const {id, value}= e.target
         setPost({...post, [id]: value})
     }
-
-
     const modalWindow = (type, id)=>{
         setHomeModal(!homeModal)
         if (type === "readMore"){
             setReadMore(true)
-            // setBioScreen(false)
-            // setUploadPic(false)
             selectedPostId = id
         }
     }
@@ -61,15 +64,143 @@ function UserProfile(props) {
 
 
     }
+    const followUser = ()=>{
+        // once clicked the person who is ffolloing will be added to the persons followers list as well as  to their own list of following
 
+        // when the user did not have any follower initially
+        if(!user.Followers){
+            const followerObject = {
+                Followers:[visitorId]
+            }
+            firebase.database().ref(`/${userId}`).update(followerObject)
+            setIsPersonFollowingUser(true)
+        } else {
+            const userFollowers = [...user.Followers];
+            userFollowers.push(visitorId)
+            const followerObject = {
+                Followers: userFollowers
+            }
+            firebase.database().ref(`/${userId}`).update(followerObject);
+            setIsPersonFollowingUser(true)
+        }
+        // then adding the user to the visitors following list
+        // similarly first check if the visitor has any following key in their data
+
+        if(!visitor.Following){
+            const followingObject = {
+                Following:[userId]
+            }
+            firebase.database().ref(`/${visitor.id}`).update(followingObject)
+        }else {
+            const visitorsFollowings = [...visitor.Following];
+            visitorsFollowings.push(userId)
+            const followingObject = {
+                Following: visitorsFollowings
+            }
+            firebase.database().ref(`/${visitor.id}`).update(followingObject)
+
+        }
+    }
+    // unfollowing user 
+    const unFollowUser=()=>{
+        //removing the visitor from the users followers list
+        console.log('followers?',user.Followers)
+        const userFollowers = [...user.Followers];
+        const filteredFollower = userFollowers.filter(follower=>{
+            return follower !== visitorId
+        })
+        const followerObject = {
+            Followers: filteredFollower
+        }
+        firebase.database().ref(`/${userId}`).update(followerObject);
+        setIsPersonFollowingUser(false)
+
+
+        const visitorsFollowings = [...visitor.Following];
+        const filteredFollowerings = visitorsFollowings.filter(follower=>{
+            return follower !== userId
+        })
+        const followingObject = {
+            Following: filteredFollowerings
+        }
+        firebase.database().ref(`/${visitor.id}`).update(followingObject)
+
+    }
+    // getting data for both users and the visitors
     useEffect(() => {
+        // getting the users data who's profile viewer is viewing. 
+        let userData
+        // let visitorData
         firebase.database().ref(`/${userId}`).on('value', (response)=>{
             const data = response.val();
-            // console.log(data)
-            setUser(data)
-            
+            userData = {...data, id: userId}
+            setUser({...data, id: userId})
+            if(data.Followers){
+                //'checking users followers list: 
+                data.Followers.map(follower=>{
+                    if (follower === visitorId){
+                        setIsPersonFollowingUser(true)
+                    }
+                })
+            }
         })
+        // getting the viewers data as well
+        firebase.database().ref().orderByChild('emailAddress').equalTo(email).on('value', (response)=>{
+            const data = response.val();
+            // visitorData = data
+            const dataArray = []
+            for (let key in data) {
+                // making sure to add the id inside the object as well.
+                const newObject = {...data[key], id: key}
+                    // then pushing the users in the users array. 
+                dataArray.push(newObject)
+            }
+            setVisitor(dataArray[0])
+        })
+
+        firebase.database().ref().on('value', (response)=>{
+            const data = response.val()
+            const dataArray = []
+            for (let key in data) {
+                // making sure to add the id inside the object as well.
+                const newObje = {...data[key], id: key}
+                    // then pushing the users in the users array. 
+                dataArray.push(newObje)
+            }
+            // filtering the users object to get only the followers likes 
+            const userFollowersArr = [];
+            if(userData.Followers){
+                userData.Followers.forEach(person=>{
+                    dataArray.forEach(other=>{
+                        if(other.id === person){
+                            userFollowersArr.push(other)
+                        }
+                    })
+                })
+            }
+            const userFollowingArr = [];
+            if(userData.Following){
+                userData.Following.forEach(person=>{
+                    dataArray.forEach(other=>{
+                        if(other.id === person){
+                            userFollowingArr.push(other)
+                        }
+                    })
+                })
+            }
+            setUsersFollowers(userFollowersArr)
+            setUsersFollowings(userFollowingArr)
+
+
+
+
+        })
+
+
+
     }, [])
+
+    // getting the users post data's 
     useEffect(() => {
         const dbRef = firebase.database().ref();
         dbRef.orderByChild('dataType').equalTo('userPost').on('value', (response)=>{
@@ -82,11 +213,9 @@ function UserProfile(props) {
                 postsArray.push(userObject)
             }
             // setUsers(postsArray)
-            console.log(postsArray)
             const usersPost = postsArray.filter(post=>{
                 return post.userId === userId
             })
-            console.log(usersPost)
             setUserPost(usersPost)
         })
 
@@ -107,8 +236,13 @@ function UserProfile(props) {
                 : null
             }
             <aside>
-                <button className="followBtn">Follow</button>
-                {user ? <Profile  user={user} modalWindow={modalWindow} profielType = {'visitor'}/>  : null}
+                {isPersonFollowingUser? 
+                <button className="followBtn" onClick={unFollowUser}>Unfollow</button> 
+                : 
+                <button className="followBtn" onClick={followUser}>Follow</button>
+                }
+                
+                {user ? <Profile  user={user} modalWindow={modalWindow} profielType = {'visitor'} usersFollowers={usersFollowers}  usersFollowings={usersFollowings}/>  : null}
             </aside>
             <article>
                 {/* <form className="card postForm" onSubmit={postOnUsersWalls}>

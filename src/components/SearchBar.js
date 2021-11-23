@@ -75,7 +75,7 @@ function SearchBar() {
                     {filteredUsers.map(user=>
                         <Link onClick={()=>navigateTo(user.fullName,user.id)}  key={user.id} to={`/userProfile/${user.fullName}/${user.id}`} >
                             <li className="searchLink">
-                                <img className="searchThmb" src={user.profileImg.imageUrl} alt="" />
+                                <img className="searchThmb" src={user.profileImg ? user.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt="" />
                                 {user.fullName}
                             </li>
                         </Link>

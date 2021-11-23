@@ -111,6 +111,9 @@ aside {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 .friendsGalleryThumb img {
     width: 90px;

@@ -7,12 +7,12 @@ import BioEdit from './BioEdit';
 import ReadPost from './ReadPost';
 import UploadChangeProPic from './UploadChangeProPic';
 import Profile from './Profile';
-const usersEmail = localStorage.emailAddress;
-const loggedInd = localStorage.loggedInd;
-let userId = '';
-let selectedPostId;
 
 function Homepage() {
+    const usersEmail = localStorage.emailAddress;
+    const loggedInd = localStorage.loggedInd;
+    let userId = '';
+    let selectedPostId;
     const [user, setUser] = useState({})
     const [usersPost, setUsersPost] = useState({});
     const [post, setPost] = useState({
@@ -22,6 +22,9 @@ function Homepage() {
     const [bioScreen, setBioScreen] = useState(false)
     const [readMore, setReadMore] = useState(false)
     const [uploadPic, setUploadPic] = useState(false)
+    const [usersFollowers,setUsersFollowers] = useState([])
+    const [usersFollowings,setUsersFollowings] = useState([])
+
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -83,18 +86,20 @@ function Homepage() {
             for (let key in data) {
                 // making sure to add the id inside the object as well.
                 const newObje = {...data[key], id: key}
-                                // then pushing the users in the users array. 
-
+                    // then pushing the users in the users array. 
                 dataArray.push(newObje)
             }
             // getting data only for the user from the email address that's stored in the local storage
+            let userData 
             dataArray.forEach(user=>{
                 if(user.emailAddress === usersEmail){
                     userId = user.id
                     localStorage.setItem("loggedUserId",  user.id);
+                    userData=user
                     setUser(user);
                 }
             })
+            
             const usersPostArray = []
             // getting data for users posts
             dataArray.forEach(obj=>{
@@ -123,9 +128,34 @@ function Homepage() {
                 if(A.minutes < B.minutes) return 1
             })
             setUsersPost(sortedArr)
+
+            // getting data for the followers. 
+            console.log(userData)
+            const userFollowersArr = [];
+            if(userData.Followers){
+                userData.Followers.forEach(person=>{
+                    dataArray.forEach(other=>{
+                        if(other.id === person){
+                            userFollowersArr.push(other)
+                        }
+                    })
+                })
+            }
+            const userFollowingArr = [];
+            if(userData.Following){
+                userData.Following.forEach(person=>{
+                    dataArray.forEach(other=>{
+                        if(other.id === person){
+                            userFollowingArr.push(other)
+                        }
+                    })
+                })
+            }
+            setUsersFollowers(userFollowersArr)
+            setUsersFollowings(userFollowingArr)
+            // console.log('followers: ', userFollowersArr)
+            // setUsersFollowers(userFollowersArr)
         })
-        
-        
     }, [])
     return (
         <section className="wrapper row">
@@ -144,7 +174,7 @@ function Homepage() {
             }
             { loggedInd === "false" ||  !loggedInd?  <Navigate to='/Welcome'/> :  null}
             <aside>
-                <Profile user={user} modalWindow={modalWindow} profielType = {'user'}/>
+                <Profile user={user} modalWindow={modalWindow} profielType = {'user'} usersFollowers={usersFollowers} usersFollowings={usersFollowings}/>
             </aside>
             {/* <Wall user={user} userId={userId} usersPost={usersPost}/> */}
             <article className="wall">
