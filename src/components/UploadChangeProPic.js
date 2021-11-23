@@ -27,15 +27,16 @@ function UploadChangeProPic(props) {
         setUploadBtn(true)
     }
     const uploadUrl = ()=>{
-        setUploading(true)
+        // setUploading(true)
         const object = {
             profileImg: {
-                userId: props.userId,
+                userId: props.user.id,
                 imageUrl: srcUrl
             }
         }
+        console.log('object: ', object)
         // adding img url to the database
-        firebase.database().ref(`/${props.userId}`).update(object)
+        firebase.database().ref(`/${props.user.id}`).update(object)
         //  once successfull, the following functions are called. 
         setUploading(false)
         setSrcUrl('')
@@ -46,7 +47,10 @@ function UploadChangeProPic(props) {
     }
     const handleUploadImg = async (e)=>{
         if(urlAvailable){
+            console.log('whats showing ')
             // first check if user previously had uploaded a photo before. if yes then we have to delete the old file and then update the data base
+            console.log(props.user.profileImg )
+
             if (props.user.profileImg ){
                 const imageObj = props.user.profileImg;
                 if (imageObj.imageId){
@@ -55,7 +59,7 @@ function UploadChangeProPic(props) {
                     // creating the object to add to the database
                     const object = {
                         profileImg: {
-                            userId: props.userId,
+                            userId: props.user.id,
                             imageUrl: srcUrl
                         }
                     }
@@ -63,10 +67,10 @@ function UploadChangeProPic(props) {
                     // deleting the old photo 
                     await storageRef.delete().then(() => {
                         // then delete data of the image from the data base which is the just the id 
-                        firebase.database().ref(`/${props.userId}`).child('profileImg').child('imageId').remove()
+                        firebase.database().ref(`/${props.user.id}`).child('profileImg').child('imageId').remove()
                     });
                     // adding img url to the database
-                    firebase.database().ref(`/${props.userId}`).update(object);
+                    firebase.database().ref(`/${props.user.id}`).update(object);
                     //  once successfull, the following functions are called. 
                     setUploading(false)
                     setSrcUrl('')
@@ -81,6 +85,9 @@ function UploadChangeProPic(props) {
             } else {
                 uploadUrl()
             }
+
+
+
         }else {
             // providing each images a unique id
             const id = uuidv4();
@@ -117,13 +124,13 @@ function UploadChangeProPic(props) {
                 await imagesRef.getDownloadURL().then((url=>{
                     const object = {
                         profileImg: {
-                            userId: props.userId,
+                            userId: props.user.id,
                             imageId: id,
                             imageUrl: url
                         }
                     }
                     // adding the object profileImg to the users data
-                    firebase.database().ref(`/${props.userId}`).update(object)
+                    firebase.database().ref(`/${props.user.id}`).update(object)
                 }))
                 // once the upload is done we turn off loading icon
                 setUploading(false)
@@ -142,7 +149,7 @@ function UploadChangeProPic(props) {
                 }
             }
             // adding the object profileImg to the users data
-            firebase.database().ref(`/${props.userId}`).update(object)
+            firebase.database().ref(`/${props.user.id}`).update(object)
         }))
     }
 

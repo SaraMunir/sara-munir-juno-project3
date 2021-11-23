@@ -25,9 +25,12 @@ function NavBar() {
     return (
         <nav className="wrapper">
             {
+                // only users who are logged in will be able to see the nav menu
                 loggedInd ?
                 <div className="navContainer">
+                    {/* search bar to find other users */}
                     <SearchBar/>
+                    {/* option to show menu for the users */}
                     <button onClick={showMenu} className="profileMenuBtn">
                         <i className="profileIcon fas fa-2x fa-user-circle"></i>
                     </button>

@@ -47,6 +47,14 @@ function PostCards(props) {
             :<p  className="postContent">{props.post.posts}</p>}
 
             {/* redering posted time */}
+            {
+                props.post.dataType === "followersPost" ? 
+                <div className="postersCntr">
+                    <img className="smallThmbNail" src={props.post.poster.profileImg.imageUrl } alt={`image of ${props.post.poster.fullName}`} />
+                    <p>{props.post.poster.fullName }</p>
+                </div>
+                : null
+            }
 
             <div className="likeStuf">
                 <button className="likeBtn" onClick={()=>likePost(props.post.id)}><i className="far fa-heart"></i></button>

@@ -179,5 +179,52 @@ aside {
     cursor: pointer;
     font-style: italic;
 }
+.tabBar{
+    display: flex;
+    
+}
+
+.tab {
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    background: #d4d4e7;
+    margin-right: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer;
+}
+.tabActive {
+    font-family: 'Montserrat', sans-serif;
+    padding: 10px;
+    background: #ededff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+.thoughtCntr{
+    background: #ededff;
+    min-height: 100vh;
+    padding: 15px;
+    border-radius: 10px;
+    border-top-left-radius: 0px;
+}
+.postersCntr{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-style: italic;
+}
+.postersCntr{
+
+}
 
 
+
+.smallThmbNail {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+}

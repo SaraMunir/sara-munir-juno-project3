@@ -53,15 +53,15 @@ function UserProfile(props) {
 
                 //  creating the post as an object with users id so that i can pull data based on the id
             const postObject ={
-                dataType: 'userPost',
+                dataType: 'followersPost',
                 userId: userId,
                 posts: post.postText, 
                 timeStamp: dateTime,
+                postersId: visitor.id
             }
             dbRef.push(postObject);
             setPost({postText: ''})
         }
-
 
     }
     const followUser = ()=>{
@@ -104,22 +104,25 @@ function UserProfile(props) {
     // unfollowing user 
     const unFollowUser=()=>{
         //removing the visitor from the users followers list
-        console.log('followers?',user.Followers)
         const userFollowers = [...user.Followers];
+        // removing the visitor's id from the users follower's list. 
         const filteredFollower = userFollowers.filter(follower=>{
             return follower !== visitorId
         })
+        // updating users data on firebase database
         const followerObject = {
             Followers: filteredFollower
         }
         firebase.database().ref(`/${userId}`).update(followerObject);
         setIsPersonFollowingUser(false)
 
-
+        // removing the user from the visitors list
         const visitorsFollowings = [...visitor.Following];
+        // removing the user's id from the visitors following's list. 
         const filteredFollowerings = visitorsFollowings.filter(follower=>{
             return follower !== userId
         })
+        // then update the data
         const followingObject = {
             Following: filteredFollowerings
         }
@@ -130,7 +133,6 @@ function UserProfile(props) {
     useEffect(() => {
         // getting the users data who's profile viewer is viewing. 
         let userData
-        // let visitorData
         firebase.database().ref(`/${userId}`).on('value', (response)=>{
             const data = response.val();
             userData = {...data, id: userId}
@@ -147,7 +149,6 @@ function UserProfile(props) {
         // getting the viewers data as well
         firebase.database().ref().orderByChild('emailAddress').equalTo(email).on('value', (response)=>{
             const data = response.val();
-            // visitorData = data
             const dataArray = []
             for (let key in data) {
                 // making sure to add the id inside the object as well.
@@ -157,7 +158,8 @@ function UserProfile(props) {
             }
             setVisitor(dataArray[0])
         })
-
+        
+        // getting other users data to get the followers & followings objects.
         firebase.database().ref().on('value', (response)=>{
             const data = response.val()
             const dataArray = []
@@ -167,7 +169,7 @@ function UserProfile(props) {
                     // then pushing the users in the users array. 
                 dataArray.push(newObje)
             }
-            // filtering the users object to get only the followers likes 
+            // filtering the users object to get only the followers list 
             const userFollowersArr = [];
             if(userData.Followers){
                 userData.Followers.forEach(person=>{
@@ -178,6 +180,7 @@ function UserProfile(props) {
                     })
                 })
             }
+            // filtering the users object to get only the followings list 
             const userFollowingArr = [];
             if(userData.Following){
                 userData.Following.forEach(person=>{
@@ -190,17 +193,10 @@ function UserProfile(props) {
             }
             setUsersFollowers(userFollowersArr)
             setUsersFollowings(userFollowingArr)
-
-
-
-
         })
-
-
-
     }, [])
 
-    // getting the users post data's 
+    // getting the users posts data's 
     useEffect(() => {
         const dbRef = firebase.database().ref();
         dbRef.orderByChild('dataType').equalTo('userPost').on('value', (response)=>{
@@ -245,7 +241,9 @@ function UserProfile(props) {
                 {user ? <Profile  user={user} modalWindow={modalWindow} profielType = {'visitor'} usersFollowers={usersFollowers}  usersFollowings={usersFollowings}/>  : null}
             </aside>
             <article>
-                {/* <form className="card postForm" onSubmit={postOnUsersWalls}>
+
+            {isPersonFollowingUser? 
+                <form className="card postForm" onSubmit={postOnUsersWalls}>
                     <label htmlFor="postText" hidden>post your thought</label>
                     <textarea 
                     id="postText" 
@@ -258,7 +256,9 @@ function UserProfile(props) {
                     <div className="row jstfyCntEnd">
                         <button className={post.postText ? "postBtn" : "postBtn postBtnGrey" }>post</button>
                     </div>
-                </form> */}
+                </form> : 
+                
+                null }
                 <div className="posts">
                     { usersPost.length>0 ?
                     usersPost.map(post=>

@@ -15,6 +15,7 @@ function Homepage() {
     let selectedPostId;
     const [user, setUser] = useState({})
     const [usersPost, setUsersPost] = useState({});
+    const [friendsPost, setFriendsPost] = useState({});
     const [post, setPost] = useState({
         postText: ''
     });
@@ -22,9 +23,11 @@ function Homepage() {
     const [bioScreen, setBioScreen] = useState(false)
     const [readMore, setReadMore] = useState(false)
     const [uploadPic, setUploadPic] = useState(false)
+    const [myThoughtPosts, setMyThoughtPosts] = useState(true)
+    const [myFriendsPosts, setMyFriendsPosts] = useState(false)
     const [usersFollowers,setUsersFollowers] = useState([])
     const [usersFollowings,setUsersFollowings] = useState([])
-
+// 
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -47,7 +50,7 @@ function Homepage() {
             //  creating the post as an object with users id so that i can pull data based on the id
             const postObject ={
                 dataType: 'userPost',
-                userId: userId,
+                userId: user.id,
                 posts: post.postText, 
                 timeStamp: dateTime,
             }
@@ -76,6 +79,17 @@ function Homepage() {
             setBioScreen(false)
             selectedPostId = id
         }
+    }
+    const toggleTabs= (tab)=>{
+        if (tab === 'myThoughts'){
+            setMyThoughtPosts(true);
+            setMyFriendsPosts(false);
+        }
+        if (tab === 'myFriendsThoughts'){
+            setMyFriendsPosts(true);
+            setMyThoughtPosts(false);
+        }
+        // myFriendsThoughts
     }
 
     useEffect(() => {
@@ -111,8 +125,7 @@ function Homepage() {
                     }
                 }
             })
-            // console.log(usersPostArray)
-            // the sort the array by posting order 
+            // sorting the array by posting order 
             const sortedArr = usersPostArray.sort((a,b)=>{
                 let A = a.timeStamp
                 let B = b.timeStamp
@@ -129,8 +142,58 @@ function Homepage() {
             })
             setUsersPost(sortedArr)
 
+
+            // getting the posts data from the users followers
+            const usersFriendsPostsArray = []
+
+            dataArray.forEach(obj=>{
+                //  first get data that has the type of followersPost
+                if(obj.dataType ==='followersPost'){
+                    // if the posts userid is equal to user's userid then push the object to the posts array
+                    if(userId === obj.userId){
+                        usersFriendsPostsArray.push(obj)
+                    }
+                }
+            })
+            // addign the posters object to the array:
+            const editedUsersFriendsPostsArray =[]
+            usersFriendsPostsArray.forEach(friendsPost=>{
+                // console.log('posts: ', friendsPost)
+                dataArray.forEach(other=>{
+                    if(other.id === friendsPost.postersId){
+                        const posterObjt = {...friendsPost, 
+                            poster: {
+                            fullName : other.fullName,
+                            profileImg: other.profileImg,
+                            id: other.id
+                        } }
+                        editedUsersFriendsPostsArray.push(posterObjt)
+                    }
+                })
+            })
+
+            // sorting the array by posting order 
+            const sortingFriendsPosts = editedUsersFriendsPostsArray.sort((a,b)=>{
+                let A = a.timeStamp
+                let B = b.timeStamp
+                if(A.year > B.year) return -1
+                if(A.year < B.year) return 1
+                if(A.month > B.month) return -1
+                if(A.month < B.month) return 1
+                if(A.date > B.date) return -1
+                if(A.date < B.date) return 1
+                if(A.hours > B.hours) return -1
+                if(A.hours < B.hours) return 1
+                if(A.minutes > B.minutes) return -1
+                if(A.minutes < B.minutes) return 1
+            })
+            console.log('friends posts array', sortingFriendsPosts)
+
+            setFriendsPost(sortingFriendsPosts)
+
+
             // getting data for the followers. 
-            console.log(userData)
+            // console.log(userData)
             const userFollowersArr = [];
             if(userData.Followers){
                 userData.Followers.forEach(person=>{
@@ -141,6 +204,8 @@ function Homepage() {
                     })
                 })
             }
+            
+            // getting data for the followings. 
             const userFollowingArr = [];
             if(userData.Following){
                 userData.Following.forEach(person=>{
@@ -174,10 +239,11 @@ function Homepage() {
             }
             { loggedInd === "false" ||  !loggedInd?  <Navigate to='/Welcome'/> :  null}
             <aside>
-                <Profile user={user} modalWindow={modalWindow} profielType = {'user'} usersFollowers={usersFollowers} usersFollowings={usersFollowings}/>
+                <Profile user={user} modalWindow={modalWindow} profileType = {'user'} usersFollowers={usersFollowers} usersFollowings={usersFollowings}/>
             </aside>
             {/* <Wall user={user} userId={userId} usersPost={usersPost}/> */}
             <article className="wall">
+                {/* posting users thought input */}
                 <form className="card postForm" onSubmit={postMyThought}>
                     <label htmlFor="postText" hidden>post your thought</label>
                     <textarea 
@@ -192,18 +258,47 @@ function Homepage() {
                         <button className={post.postText ? "postBtn" : "postBtn postBtnGrey" }>post</button>
                     </div>
                 </form>
-                <div className="posts">
-                    { usersPost.length>0 ?
-                    usersPost.map(post=>
-                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}/>
-                    )
-                    : 
-                    <div className="card">
-                    <p>Share your first post</p>
-                        <div className="likeStuf">
-                            <button><i className="far fa-heart"></i></button>
-                        </div>
-                    </div>
+                {/* rendering all the posts from users and followers */}
+                <ul className="tabBar">
+                    <li>
+                        <button className={myThoughtPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myThoughts')}>My Thoughts</button></li>
+                    <li><button className={myFriendsPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myFriendsThoughts')}>My Followers thoughts</button></li>
+                </ul>
+                <div className="thoughtCntr">
+                    {
+                        myThoughtPosts ?
+                        <div className="posts">
+                            { usersPost.length>0 ?
+                            usersPost.map(post=>
+                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}/>
+                            )
+                            : 
+                            <div className="card">
+                            <p>Share your first post</p>
+                                <div className="likeStuf">
+                                    <button><i className="far fa-heart"></i></button>
+                                </div>
+                            </div>
+                            }
+                        </div> : ''
+                    }
+                    {
+                        myFriendsPosts ?
+                        <div className="posts">
+                            {
+                            friendsPost.length>0 ?
+                            friendsPost.map(post=>
+                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}/>
+                            )
+                            : 
+                            <div className="card">
+                            <p>No Posts yet</p>
+                                <div className="likeStuf">
+                                    <button><i className="far fa-heart"></i></button>
+                                </div>
+                            </div>
+                            }
+                        </div> : ''
                     }
                 </div>
             </article>

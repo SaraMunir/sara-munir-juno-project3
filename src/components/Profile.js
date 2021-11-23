@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import firebase from '../firebase';
 
 
 function Profile(props) {
@@ -7,8 +6,7 @@ function Profile(props) {
     const usersFollowings = props.usersFollowings
     const user = props.user
     const modalWindow = props.modalWindow
-    const [profileType, setProfileType] = useState(props.profileType)
-
+    const profileType = props.profileType
 
     return (
         <div className="profile">
