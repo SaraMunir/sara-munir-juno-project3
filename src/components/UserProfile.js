@@ -10,17 +10,23 @@ let selectedPostId;
 function UserProfile(props) {
     const visitorId = localStorage.loggedUserId;
     const email = localStorage.emailAddress;
-    const { userName } = useParams();
     const { userId } = useParams();
     const [user, setUser]= useState({});
     const [visitor, setVisitor]= useState({});
-    // const [profielType, setProfileType]=useState('visitor');
     const [usersPost, setUserPost]=useState([]);
+
+    const [usersFriendsPost, setUsersFriendsPost] = useState({});
+
+
     const [homeModal, setHomeModal] = useState(false);
     const [readMore, setReadMore] = useState(false);
     const [isPersonFollowingUser, setIsPersonFollowingUser] = useState(false);
     const [usersFollowers,setUsersFollowers] = useState([])
     const [usersFollowings,setUsersFollowings] = useState([])
+
+    const [usersThoughtPosts, setUsersThoughtPosts] = useState(true)
+    const [usersFriendsPosts, setUsersFriendsPosts] = useState(false);
+    const [postObject, setPostObject] = useState({})
 
 
     const [post, setPost] = useState({
@@ -31,11 +37,13 @@ function UserProfile(props) {
         const {id, value}= e.target
         setPost({...post, [id]: value})
     }
-    const modalWindow = (type, id)=>{
+    const modalWindow = (type, id, obj)=>{
         setHomeModal(!homeModal)
         if (type === "readMore"){
             setReadMore(true)
-            selectedPostId = id
+            selectedPostId = id;
+            setPostObject(obj)
+
         }
     }
     const postOnUsersWalls=(e)=>{
@@ -129,6 +137,53 @@ function UserProfile(props) {
         firebase.database().ref(`/${visitor.id}`).update(followingObject)
 
     }
+
+    const toggleTabs= (tab)=>{
+        if (tab === 'myThoughts'){
+            setUsersThoughtPosts(true);
+            setUsersFriendsPosts(false);
+        }
+        if (tab === 'myFriendsThoughts'){
+            setUsersFriendsPosts(true);
+            setUsersThoughtPosts(false);
+        }
+        // myFriendsThoughts
+    }
+
+    const likePost = (postObj)=>{
+        // check if the post had been liked before or not
+        if(postObj.likes){
+            // if liked we have to copy the likes in a new array constant
+            const newList = [...postObj.likes];
+            // add the visitors id to the like array
+            newList.push(visitorId)
+            // create an object with the new array
+            const likeObj ={
+                likes:newList
+            }
+            // update firebase database. 
+            firebase.database().ref(`/${postObj.id}`).update(likeObj);
+        }else {
+            // since the post was not liked before we are creating a property of likes with
+            const likeObj ={
+                likes:[
+                    visitor.id
+                ]
+            }
+            firebase.database().ref(`/${postObj.id}`).update(likeObj);
+        }
+    }
+    const unLikePost = (postObj)=>{
+        // remove the visitors id from the from the array of the liked ids. 
+        const unlikedArray = postObj.likes.filter(like=>{
+            return like !== visitorId
+        })
+         // creating an object with the rest of the array and then posting it in the database
+        const likeObj ={
+            likes:unlikedArray
+        }
+        firebase.database().ref(`/${postObj.id}`).update(likeObj);
+    }
     // getting data for both users and the visitors
     useEffect(() => {
         // getting the users data who's profile viewer is viewing. 
@@ -169,6 +224,37 @@ function UserProfile(props) {
                     // then pushing the users in the users array. 
                 dataArray.push(newObje)
             }
+
+            // getting the posts data from the users followers
+            const usersFriendsPostsArray = []
+
+            dataArray.forEach(obj=>{
+                //  first get data that has the type of followersPost
+                if(obj.dataType ==='followersPost'){
+                    // if the posts userid is equal to user's userid then push the object to the posts array
+                    if(userId === obj.userId){
+                        usersFriendsPostsArray.push(obj)
+                    }
+                }
+            })
+            // addign the posters object to the array:
+            const editedUsersFriendsPostsArray =[]
+            usersFriendsPostsArray.forEach(friendsPost=>{
+                // console.log('posts: ', friendsPost)
+                dataArray.forEach(other=>{
+                    if(other.id === friendsPost.postersId){
+                        const posterObjt = {...friendsPost, 
+                            poster: {
+                            fullName : other.fullName,
+                            profileImg: other.profileImg,
+                            id: other.id
+                        } }
+                        editedUsersFriendsPostsArray.push(posterObjt)
+                    }
+                })
+            })
+
+
             // filtering the users object to get only the followers list 
             const userFollowersArr = [];
             if(userData.Followers){
@@ -180,6 +266,23 @@ function UserProfile(props) {
                     })
                 })
             }
+            // sorting the array by posting order 
+            const sortingFriendsPosts = editedUsersFriendsPostsArray.sort((a,b)=>{
+                let A = a.timeStamp
+                let B = b.timeStamp
+                if(A.year > B.year) return -1
+                if(A.year < B.year) return 1
+                if(A.month > B.month) return -1
+                if(A.month < B.month) return 1
+                if(A.date > B.date) return -1
+                if(A.date < B.date) return 1
+                if(A.hours > B.hours) return -1
+                if(A.hours < B.hours) return 1
+                if(A.minutes > B.minutes) return -1
+                if(A.minutes < B.minutes) return 1
+            })
+            setUsersFriendsPost(sortingFriendsPosts)
+            
             // filtering the users object to get only the followings list 
             const userFollowingArr = [];
             if(userData.Following){
@@ -214,11 +317,10 @@ function UserProfile(props) {
             })
             setUserPost(usersPost)
         })
-
     }, [])
 
     return (
-        <section className="wrapper row">
+        <section className="wrapper mainProfile">
             {
                 homeModal?
                 <div className="modalWindow">
@@ -226,7 +328,9 @@ function UserProfile(props) {
                         <div className="row jstfyCntEnd">
                             <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                         </div>
-                        {readMore ? <ReadPost postId={selectedPostId}/> : null}
+                        {readMore ? 
+                        <ReadPost postId={selectedPostId} post={postObject} isPersonFollowingUser={isPersonFollowingUser}  likePost={likePost} unLikePost={unLikePost} userId={visitorId}/> 
+                        : null}
                     </div>
                 </div> 
                 : null
@@ -240,9 +344,9 @@ function UserProfile(props) {
                 
                 {user ? <Profile  user={user} modalWindow={modalWindow} profielType = {'visitor'} usersFollowers={usersFollowers}  usersFollowings={usersFollowings}/>  : null}
             </aside>
-            <article>
-
-            {isPersonFollowingUser? 
+            <article className="wall">
+            {
+                isPersonFollowingUser? 
                 <form className="card postForm" onSubmit={postOnUsersWalls}>
                     <label htmlFor="postText" hidden>post your thought</label>
                     <textarea 
@@ -257,24 +361,49 @@ function UserProfile(props) {
                         <button className={post.postText ? "postBtn" : "postBtn postBtnGrey" }>post</button>
                     </div>
                 </form> : 
-                
-                null }
+                null 
+            }
+            <ul className="tabBar">
+                <li><button className={usersThoughtPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myThoughts')}>{user.fullName}'s Thoughts</button></li>
+                <li><button className={usersFriendsPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myFriendsThoughts')}>{user.fullName}'s  Followers thoughts</button></li>
+            </ul>
+            <div className="thoughtCntr">
+            {
+                usersThoughtPosts ?
                 <div className="posts">
                     { usersPost.length>0 ?
                     usersPost.map(post=>
-                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}/>
+                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}  likePost={likePost}
+                        unLikePost={unLikePost}
+                        />
                     )
                     : 
                     <div className="card">
-                        <p>{userName} has not posted any thoughts yet</p>
-                        <div className="likeStuf">
-                            <button><i className="far fa-heart"></i></button>
-                        </div>
+                    <p>{user.fullName} has not shared any thoughts yet</p>
                     </div>
                     }
-                </div>
-            </article>
+                </div> : ''
+            }
+            {
+                usersFriendsPosts ?
+                <div className="posts">
+                    {
+                    usersFriendsPost.length>0 ?
+                    usersFriendsPost.map(post=>
+                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'} likePost={likePost}
+                        unLikePost={unLikePost}
+                        />
+                    )
+                    : 
+                    <div className="card">
+                    <p>No Posts yet</p>
+                    </div>
+                    }
+                </div> : ''
+            }
 
+            </div>
+            </article>
         </section>
     )
 }

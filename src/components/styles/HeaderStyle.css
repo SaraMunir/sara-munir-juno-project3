@@ -6,6 +6,7 @@ header {
 .wrapper {
     width: 80%;
     margin: 0 auto;
+    max-width: 1200px;
 }
 .heroText{
     width: 50%;
@@ -49,16 +50,17 @@ header {
     overflow: auto;
 }
 .modalWindowCntr {
-    background: white;
-    width: 40%;
+    background: #f2eef7;
+    background: #f2eef7;
+    width: 50%;
     min-height: 65vh;
     margin: 0 auto;
     border-radius: 10px;
     text-align: center;
-    padding: 50px;
+    padding: 35px;
+    
     position: relative;
-    display: flex;
-    flex-direction: column;
+
     justify-content: center;
     overflow: auto;
 
@@ -79,6 +81,17 @@ header {
 .heroImg{
     width: 50%;
     object-fit: cover;
+}
+
+@media (max-width: 1050px) {
+    .wrapper {
+        width: 95%;
+    }
+}
+@media (max-width: 900px) {
+    .modalWindowCntr {
+        width: 70%;
+    }
 }
 
 

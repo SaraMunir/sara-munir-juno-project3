@@ -1,3 +1,7 @@
+.mainProfile{
+    display: flex;
+    flex-direction: row;
+}
 
 article {
     width: 60%;
@@ -121,22 +125,14 @@ aside {
     object-fit: cover;
     border-radius: 50%;
     margin: 5px auto;
-
 }
 .posts {
     display: grid;
-    /* flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between; */
     grid-template-columns: 1fr 1fr 1fr;
     gap: 20px;
 }
 .posts .card {
-    /* width: 26%; */
     margin: 0;
-}
-.postContent{
-    /* min-height: 80px; */
 }
 .postBtn{
     background: #8a80e0;
@@ -171,6 +167,7 @@ aside {
     color: #5b2dff;
     font-family: 'Julius Sans One', sans-serif;
     font-style: italic;
+    text-align: left;
 
 }
 .readMore{
@@ -181,7 +178,6 @@ aside {
 }
 .tabBar{
     display: flex;
-    
 }
 
 .tab {
@@ -201,6 +197,8 @@ aside {
     border-top-right-radius: 5px;
     margin-right: 5px;
     cursor: pointer;
+    color: #5b2dff;
+    font-weight: 600;
 }
 .thoughtCntr{
     background: #ededff;
@@ -215,11 +213,6 @@ aside {
     align-items: center;
     font-style: italic;
 }
-.postersCntr{
-
-}
-
-
 
 .smallThmbNail {
     width: 35px;
@@ -227,4 +220,80 @@ aside {
     border-radius: 50%;
     object-fit: cover;
     margin-right: 8px;
+}
+.likeBtn {
+    cursor: pointer;
+}
+.likeBtnActive{
+    color: #ff9f00;
+    cursor: pointer;
+
+}
+.likeNum{
+    /* font-size: .7rem; */
+}
+.likeSection{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .7rem;
+    width: 100%;
+}
+.comment{
+    cursor: pointer;
+    color: #ff9f00;
+}
+.commentInput{
+    text-align: left;
+}
+.commentInput input{
+    padding: 10px;
+    width: 96%;
+    border: 1px solid rgba(216, 216, 216, 0.527);
+}
+.postSection{
+    /* border: 1px solid goldenrod; */
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+
+@media (max-width: 1050px) {
+    .posts {
+        grid-template-columns: 1fr 1fr;
+    }
+    .friendsGalleryThumb img {
+        width: 60px;
+        height: 60px;
+    }
+}
+@media (max-width: 750px) {
+    .posts {
+        grid-template-columns: 1fr;
+    }
+    .bioContainer {
+        width: 91%;
+        justify-content: flex-start;
+        font-size: .8rem;
+        }
+
+}
+@media (max-width: 600px) {
+    .mainProfile{
+        display: flex;
+        flex-direction: column;
+    }
+    article {
+        width: 95%;
+        margin: 0 auto;
+    }
+    aside {
+        width: 95%;
+        margin: 0 auto;
+    }
 }

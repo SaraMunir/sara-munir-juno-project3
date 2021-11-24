@@ -27,7 +27,42 @@ function Homepage() {
     const [myFriendsPosts, setMyFriendsPosts] = useState(false)
     const [usersFollowers,setUsersFollowers] = useState([])
     const [usersFollowings,setUsersFollowings] = useState([])
+    const [postObject, setPostObject] = useState({})
 // 
+    const likePost = (postObj)=>{
+        // check if the post had been liked before or not
+        if(postObj.likes){
+            // if liked we have to copy the likes in a new array constant
+            const newList = [...postObj.likes];
+            // add the visitors id to the like array
+            newList.push(user.id)
+            // create an object with the new array
+            const likeObj ={
+                likes:newList
+            }
+            // update firebase database. 
+            firebase.database().ref(`/${postObj.id}`).update(likeObj);
+        }else {
+            // since the post was not liked before we are creating a property of likes with
+            const likeObj ={
+                likes:[
+                    user.id
+                ]
+            }
+            firebase.database().ref(`/${postObj.id}`).update(likeObj);
+        }
+    }
+    const unLikePost = (postObj)=>{
+        // remove the visitors id from the from the array of the liked ids. 
+        const unlikedArray = postObj.likes.filter(like=>{
+            return like !== user.id
+        })
+         // creating an object with the rest of the array and then posting it in the database
+        const likeObj ={
+            likes:unlikedArray
+        }
+        firebase.database().ref(`/${postObj.id}`).update(likeObj);
+    }
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -56,11 +91,10 @@ function Homepage() {
             }
             dbRef.push(postObject);
             setPost({postText: ''})
-
         }
     }
     // oppening modal window
-    const modalWindow =(type, id)=>{
+    const modalWindow =(type, id, obj)=>{
         setHomeModal(!homeModal)
         if (type === "editBio"){
             setBioScreen(true)
@@ -71,7 +105,7 @@ function Homepage() {
             setReadMore(true)
             setBioScreen(false)
             setUploadPic(false)
-            selectedPostId = id
+            setPostObject(obj)
         }
         if (type === "editProPic"){
             setUploadPic(true)
@@ -89,7 +123,6 @@ function Homepage() {
             setMyFriendsPosts(true);
             setMyThoughtPosts(false);
         }
-        // myFriendsThoughts
     }
 
     useEffect(() => {
@@ -187,13 +220,9 @@ function Homepage() {
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
             })
-            console.log('friends posts array', sortingFriendsPosts)
-
             setFriendsPost(sortingFriendsPosts)
 
-
             // getting data for the followers. 
-            // console.log(userData)
             const userFollowersArr = [];
             if(userData.Followers){
                 userData.Followers.forEach(person=>{
@@ -215,15 +244,13 @@ function Homepage() {
                         }
                     })
                 })
-            }
-            setUsersFollowers(userFollowersArr)
-            setUsersFollowings(userFollowingArr)
-            // console.log('followers: ', userFollowersArr)
-            // setUsersFollowers(userFollowersArr)
+            };
+            setUsersFollowers(userFollowersArr);
+            setUsersFollowings(userFollowingArr);
         })
     }, [])
     return (
-        <section className="wrapper row">
+        <section className="wrapper mainProfile">
             {homeModal?
             <div className="modalWindow">
                 <div className="modalWindowCntr">
@@ -231,7 +258,7 @@ function Homepage() {
                         <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                     </div>
                     {bioScreen ? <BioEdit user = {user} modalWindow={modalWindow}/> : null}
-                    {readMore ? <ReadPost postId={selectedPostId}/> : null}
+                    {readMore ? <ReadPost postId={selectedPostId} post = {postObject} likePost={likePost} unLikePost={unLikePost}/> : null}
                     {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
                 </div>
             </div> 
@@ -270,7 +297,7 @@ function Homepage() {
                         <div className="posts">
                             { usersPost.length>0 ?
                             usersPost.map(post=>
-                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}/>
+                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}  likePost={likePost} unLikePost={unLikePost}/>
                             )
                             : 
                             <div className="card">
@@ -288,7 +315,7 @@ function Homepage() {
                             {
                             friendsPost.length>0 ?
                             friendsPost.map(post=>
-                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}/>
+                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'} likePost={likePost} unLikePost={unLikePost}/>
                             )
                             : 
                             <div className="card">

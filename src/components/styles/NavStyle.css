@@ -39,7 +39,7 @@ li {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(59, 87, 141, 0.74);
     position: absolute;
-    z-index: 20;
+    z-index: 70;
     top: 58px;
     right: 0;
     transition: .2s;
@@ -111,4 +111,15 @@ li {
 }
 .searchLink a {
     
+}
+
+
+@media (max-width: 400px) {
+    .searchInput:active input, .searchInput:focus input, .searchInput:hover input {
+        width: 213px;
+        }
+
+    .searchWidth input {
+        width: 200px;
+        }
 }

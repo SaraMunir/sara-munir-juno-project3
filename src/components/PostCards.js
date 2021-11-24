@@ -1,27 +1,37 @@
 import {useEffect, useState} from 'react'
 import firebase from '../firebase.js'
 
+import LikedSection from './LikedSection.js';
 function PostCards(props) {
-    const[postTime, setPostTime] = useState({})
+    const [postLiked, setPostLiked] = useState(false)
+    const visitorId = localStorage.loggedUserId;
+    const [postTime, setPostTime] = useState({})
     const month= ["January","February","March","April","May","June","July",
         "August","September","October","November","December"];
     const deletePost=(id)=>{
-        // console.log(id)
         const dbRef = firebase.database().ref();
-        const something= dbRef.child(id).remove()
-        // console.log("something: ", something)
-    }
-    const likePost=(id)=>{
-        console.log('id')
+        dbRef.child(id).remove()
     }
 
     useEffect(() => {
-        // rendering time of the post
         const post = props.post
+        // checking if the post is like by the user or not
+        if(post.likes){
+            post.likes.map(like=>{
+                if(like === visitorId){
+                    setPostLiked(true)
+                }else {
+                    setPostLiked(false)
+                }
+            })
+        } else {
+            setPostLiked(false)
+        }
+        // rendering time of the post
         if(post.timeStamp){
             setPostTime(post.timeStamp)
         }
-    }, [])
+    }, [props.likePost, props.unLikePost])
     return (
         <div className="card">
             {
@@ -42,11 +52,11 @@ function PostCards(props) {
             {props.post.posts.length > 149 ? 
             <p className="postContent">
                 {props.post.posts.slice(0, 150)} . . .
-                <button className="readMore" onClick={()=>props.modalWindow('readMore', props.post.id)}>read more</button>
+                <button className="readMore" onClick={()=>props.modalWindow('readMore', props.post.id, props.post)}>read more</button>
             </p>
             :<p  className="postContent">{props.post.posts}</p>}
 
-            {/* redering posted time */}
+            {/* redering  followers posts when selected */}
             {
                 props.post.dataType === "followersPost" ? 
                 <div className="postersCntr">
@@ -55,9 +65,31 @@ function PostCards(props) {
                 </div>
                 : null
             }
-
-            <div className="likeStuf">
-                <button className="likeBtn" onClick={()=>likePost(props.post.id)}><i className="far fa-heart"></i></button>
+            {/* unLikePost */}
+            <div className="row">
+                <div className="likeSection" >
+                    <LikedSection postLiked ={postLiked}  unLikePost={props.unLikePost} likePost={props.likePost} post={props.post} />
+                    {/* {postLiked ?
+                    <div className="row">
+                        <button className="likeBtnActive" 
+                        onClick={()=>props.unLikePost(props.post)}
+                        ><i className="fas fa-heart"></i></button>
+                        <p className="likeNum">
+                        {props.post.likes ? props.post.likes.length : null}
+                        </p>
+                    </div>
+                    : 
+                    <div className="row">
+                        <button className="likeBtn" onClick={(e)=>props.likePost(props.post)}><i className="far fa-heart"></i></button>
+                        <p className="likeNum">
+                        {props.post.likes  ? props.post.likes.length : null}
+                        </p>
+                    </div>
+                    } */}
+                    <button className="comment" onClick={()=>props.modalWindow('readMore', props.post.id, props.post)}>
+                        <i className="far fa-comment"></i>
+                    </button>
+                </div>
             </div>
         </div>
     )
