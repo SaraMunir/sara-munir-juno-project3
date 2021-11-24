@@ -17,7 +17,6 @@ function UserProfile(props) {
 
     const [usersFriendsPost, setUsersFriendsPost] = useState({});
 
-
     const [homeModal, setHomeModal] = useState(false);
     const [readMore, setReadMore] = useState(false);
     const [isPersonFollowingUser, setIsPersonFollowingUser] = useState(false);

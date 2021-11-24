@@ -11,7 +11,9 @@ import Profile from './Profile';
 function Homepage() {
     const usersEmail = localStorage.emailAddress;
     const loggedInd = localStorage.loggedInd;
-    const [userId, setUserId] =useState('')
+    let userId
+    // 🚨 ⚠️ im keeping the below comment because i tried to use the state to replace user id but it doesnt work as useState does not work in this case and userId woked. 
+    // 🚨 ⚠️ const [userId, setUserId] =useState('')
 
     let selectedPostId;
     const [user, setUser] = useState({})
@@ -137,11 +139,12 @@ function Homepage() {
                     // then pushing the users in the users array. 
                 dataArray.push(newObje)
             }
+            // console.log(dataArray) this is working 
             // getting data only for the user from the email address that's stored in the local storage
             let userData 
             dataArray.forEach(user=>{
                 if(user.emailAddress === usersEmail){
-                    setUserId(user.id)
+                    userId =user.id
                     localStorage.setItem("loggedUserId",  user.id);
                     userData=user
                     setUser(user);
@@ -160,7 +163,7 @@ function Homepage() {
                 }
             })
             // sorting the array by posting order 
-            const sortedArr = usersPostArray.sort(function(a,b){
+            const sortedArr = usersPostArray.sort((a,b)=>{
                 let A = a.timeStamp
                 let B = b.timeStamp
                 if(A.year > B.year) return -1
@@ -174,6 +177,7 @@ function Homepage() {
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
             })
+            console.log(sortedArr)
             setUsersPost(sortedArr)
 
 
@@ -201,10 +205,12 @@ function Homepage() {
                             profileImg: other.profileImg,
                             id: other.id
                         } }
+                        console.log(posterObjt)
                         editedUsersFriendsPostsArray.push(posterObjt)
                     }
                 })
             })
+            console.log(editedUsersFriendsPostsArray)
 
             // sorting the array by posting order 
             const sortingFriendsPosts = editedUsersFriendsPostsArray.sort((a,b)=>{
@@ -221,6 +227,8 @@ function Homepage() {
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
             })
+            console.log(sortingFriendsPosts)
+
             setFriendsPost(sortingFriendsPosts)
 
             // getting data for the followers. 
