@@ -4,6 +4,7 @@ import LikedSection from './LikedSection';
 function ReadPost(props) {
     const [postLiked, setPostLiked] = useState(false)
     const [postTime, setPostTime] = useState({})
+    const viewersId = localStorage.loggedUserId;
     const month= ["January","February","March","April","May","June","July",
         "August","September","October","November","December"];
 
@@ -12,7 +13,7 @@ function ReadPost(props) {
         const post = props.post
         if(post.likes){
             post.likes.map(like=>{
-                if(like === props.userId){
+                if(like === viewersId){
                     setPostLiked(true)
                 }else {
                     setPostLiked(false)
@@ -51,8 +52,23 @@ function ReadPost(props) {
                     {/* unLikePost */}
                     <div className="row">
                         <div className="likeSection">
-                        <LikedSection postLiked ={postLiked}  unLikePost={props.unLikePost} likePost={props.likePost} post={props.post} />
-
+                        {postLiked ?
+                    <div className="row">
+                        <button className="likeBtnActive" 
+                        onClick={()=>props.unLikePost(props.post)}
+                        ><i className="fas fa-heart"></i></button>
+                        <p className="likeNum">
+                        {props.post.likes ? props.post.likes.length : null}
+                        </p>
+                    </div>
+                    : 
+                    <div className="row">
+                        <button className="likeBtn" onClick={(e)=>props.likePost(props.post)}><i className="far fa-heart"></i></button>
+                        <p className="likeNum">
+                        {props.post.likes  ? props.post.likes.length : null}
+                        </p>
+                    </div>
+                    }
                         </div>
                     </div>
 

@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react'
 import firebase from '../firebase.js'
 
-import LikedSection from './LikedSection.js';
 function PostCards(props) {
     const [postLiked, setPostLiked] = useState(false)
     const visitorId = localStorage.loggedUserId;
@@ -68,8 +67,7 @@ function PostCards(props) {
             {/* unLikePost */}
             <div className="row">
                 <div className="likeSection" >
-                    <LikedSection postLiked ={postLiked}  unLikePost={props.unLikePost} likePost={props.likePost} post={props.post} />
-                    {/* {postLiked ?
+                    {postLiked ?
                     <div className="row">
                         <button className="likeBtnActive" 
                         onClick={()=>props.unLikePost(props.post)}
@@ -85,7 +83,7 @@ function PostCards(props) {
                         {props.post.likes  ? props.post.likes.length : null}
                         </p>
                     </div>
-                    } */}
+                    }
                     <button className="comment" onClick={()=>props.modalWindow('readMore', props.post.id, props.post)}>
                         <i className="far fa-comment"></i>
                     </button>

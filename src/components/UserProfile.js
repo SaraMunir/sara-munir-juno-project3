@@ -58,7 +58,7 @@ function UserProfile(props) {
                 minutes: currentDate.getMinutes(),
                 }
 
-                //  creating the post as an object with users id so that i can pull data based on the id
+        //  creating the post as an object with users id so that i can pull data based on the id
             const postObject ={
                 dataType: 'followersPost',
                 userId: userId,
