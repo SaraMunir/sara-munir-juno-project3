@@ -173,7 +173,7 @@ function Homepage() {
                 if(A.hours < B.hours) return 1
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
-                
+                return 0;
             })
             setUsersPost(sortedArr)
 
@@ -221,6 +221,7 @@ function Homepage() {
                 if(A.hours < B.hours) return 1
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
+                return 0;
             })
             setFriendsPost(sortingFriendsPosts)
 
