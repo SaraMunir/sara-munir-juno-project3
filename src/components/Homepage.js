@@ -11,7 +11,8 @@ import Profile from './Profile';
 function Homepage() {
     const usersEmail = localStorage.emailAddress;
     const loggedInd = localStorage.loggedInd;
-    let userId = '';
+    const [userId, setUserId] =useState('')
+
     let selectedPostId;
     const [user, setUser] = useState({})
     const [usersPost, setUsersPost] = useState({});
@@ -140,7 +141,7 @@ function Homepage() {
             let userData 
             dataArray.forEach(user=>{
                 if(user.emailAddress === usersEmail){
-                    userId = user.id
+                    setUserId(user.id)
                     localStorage.setItem("loggedUserId",  user.id);
                     userData=user
                     setUser(user);

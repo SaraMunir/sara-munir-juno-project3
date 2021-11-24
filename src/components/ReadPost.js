@@ -1,5 +1,4 @@
 import {useEffect, useState} from 'react'
-import firebase from '../firebase';
 import LikedSection from './LikedSection';
 
 function ReadPost(props) {
