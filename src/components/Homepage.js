@@ -160,7 +160,7 @@ function Homepage() {
                 }
             })
             // sorting the array by posting order 
-            const sortedArr = usersPostArray.sort((a,b)=>{
+            const sortedArr = usersPostArray.sort(function(a,b){
                 let A = a.timeStamp
                 let B = b.timeStamp
                 if(A.year > B.year) return -1
