@@ -34,7 +34,7 @@ function LandingPage() {
             </div>
             <div className='row jstfyCntSpEvn algnItm wrapper'>
                 <div className="heroText">
-                    <h1>Thought Escape</h1>1``
+                    <h1>Thought Escape</h1>
                     <p>Share your Thoughts! Like other's thought! </p>
                     <button className="initialBtnSettng specialBtn btnYellow" onClick={()=>modalWindow('signUp')}>Sign Up</button>
                 </div>
