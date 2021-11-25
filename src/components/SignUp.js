@@ -1,9 +1,12 @@
 import {useState, useEffect, useRef} from 'react';
 import loadingIcon from './assets/Bars-1s-200px.gif'
+import { useNavigate } from "react-router-dom";
 
 import firebase from '../firebase';
 
 function SignUp() {
+    let navigate = useNavigate();
+
     const [user, setUser] = useState({
         fullName: '', emailAddress: '', password: '', dataType: 'userAccounts'
     })
@@ -66,9 +69,7 @@ function SignUp() {
             localStorage.setItem("emailAddress", user.emailAddress);
             setUser({...user, fullName: '', emailAddress: '', password: ''})
             setIsLoggedIn(true); 
-            setTimeout( function(){ 
-                document.location.reload(true);
-            }, 1000 );
+            navigate(`/Homepage`);
         }
     }
     useEffect(() => {
