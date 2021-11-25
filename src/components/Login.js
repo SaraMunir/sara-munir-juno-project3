@@ -32,8 +32,8 @@ function Login() {
             setAlert( { show: true, alertText: 'Please provide your Email Address!' } );
             return;
         }
-        // check user passwad is not empty and more than 8 
-        if( user.password === "") {
+        // check user passwad is not empty
+        if( user.password === "" ) {
             inputPassword.current.focus();
             setAlert( { show: true, alertText: 'Please provide a password !' } );
             return;
@@ -89,7 +89,6 @@ function Login() {
 
     return (
         <div className="modalCntr">
- 
                 {
                     isLoggedIn ?
                 <>

@@ -58,7 +58,7 @@ function PostCards(props) {
             {
                 props.post.dataType === "followersPost" ? 
                 <div className="postersCntr">
-                    <img className="smallThmbNail" src={props.post.poster.profileImg.imageUrl } alt={`image of ${props.post.poster.fullName}`} />
+                    <img className="smallThmbNail" src={props.post.poster.profileImg ? props.post.poster.profileImg.imageUrl :'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' } alt={`image of ${props.post.poster.fullName}`} />
                     <p>{props.post.poster.fullName }</p>
                 </div>
                 : null
