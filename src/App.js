@@ -1,6 +1,6 @@
 import './App.css';
 import React from "react";
-import { BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import LandingPage from './components/LandingPage';
 import NavBar from './components/NavBar';
 import Homepage from './components/Homepage.js';
@@ -9,7 +9,7 @@ import UserProfile from './components/UserProfile';
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <Router>
       {/* navbar containes logout, profile and search bar options */}
       <NavBar/>
         <Routes>
@@ -23,7 +23,10 @@ function App() {
           {/* other users profile page */}
           <Route exact path='/userProfile/:userName/:userId' element={<UserProfile/>}/>
         </Routes>
-      </BrowserRouter>
+      </Router>
+      <footer>
+        <p>Created at <a href="https://junocollege.com/">Juno College</a> by <a href="https://saramunir.com/">Sara Munir</a></p>
+      </footer>
     </div>
   );
 }

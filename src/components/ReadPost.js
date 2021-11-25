@@ -237,7 +237,7 @@ function ReadPost(props) {
                     {allComment.length>0?
                     allComment.map(comment=>
                         <div key={comment.id} className="row">
-                            <img className="smallThmbNail" src={comment.commentorObj.profileImg.imageUrl} alt="" />
+                            <img className="smallThmbNail" src={comment.commentorObj.profileImg ? comment.commentorObj.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' } alt="" />
                             <div key={comment.id} className="commentCard">
                                 <h4>{comment.commentorObj.fullName}</h4>
                                 <p>

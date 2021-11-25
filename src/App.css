@@ -1,5 +1,6 @@
 .App {
   font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
 }
 body {
   background: #e4e4f2;
@@ -21,6 +22,16 @@ a {
   color: #5b2dff;
 }
 
+footer {
+  background: #4828bb;
+  text-align: center;
+  padding: 10px;
+  color: white;
+}
+footer a {
+  font-weight: 600;
+  color: #ff9f00;
+}
 
 /* general styling */
 .row {
@@ -96,7 +107,6 @@ button {
 aside {
   position: relative;
 }
-
 
 .specialBtn {
   /* filter: drop-shadow(3px 3px 5px #4e340ad8); */
