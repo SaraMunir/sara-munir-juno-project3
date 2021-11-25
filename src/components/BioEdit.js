@@ -19,14 +19,13 @@ function BioEdit(props) {
         const {id, value} = e.target;
         setUsersObj({...usersObj, [id]: value})
     }
-    const handleBioSubmit = (e)=>{
+    const handleBioSubmit = async (e)=>{
         e.preventDefault();
-
         setLoading(true)
-        setTimeout(() => {
-            firebase.database().ref(`/${user.id}`).update(usersObj);
-            props.modalWindow()
+        setTimeout(async() => {
+            await firebase.database().ref(`/${user.id}`).update(usersObj);
             setLoading(false)
+            props.modalWindow()
         }, 1000);
     }
     return (

@@ -7,6 +7,7 @@ import BioEdit from './BioEdit';
 import ReadPost from './ReadPost';
 import UploadChangeProPic from './UploadChangeProPic';
 import Profile from './Profile';
+import NavBar from './NavBar';
 
 function Homepage() {
     const usersEmail = localStorage.emailAddress;
@@ -31,41 +32,56 @@ function Homepage() {
     const [usersFollowers,setUsersFollowers] = useState([])
     const [usersFollowings,setUsersFollowings] = useState([])
     const [postObject, setPostObject] = useState({})
-// 
-    const likePost = (postObj)=>{
-        // check if the post had been liked before or not
-        if(postObj.likes){
-            // if liked we have to copy the likes in a new array constant
-            const newList = [...postObj.likes];
-            // add the visitors id to the like array
-            newList.push(user.id)
-            // create an object with the new array
-            const likeObj ={
-                likes:newList
+    // 
+    // const [testLike, setTestLikes] = useState(false)
+
+    /**
+     * ⚠️ need this code for later reference
+        const likePost = (postObj)=>{
+            console.log('clicked in homepage')
+            // check if the post had been liked before or not
+            if(postObj.likes){
+                // if liked we have to copy the likes in a new array constant
+                const newList = [...postObj.likes];
+                // add the visitors id to the like array
+                newList.push(user.id)
+                // create an object with the new array
+                const likeObj ={
+                    likes:newList
+                }
+                setTestLikes(true)
+                // update firebase database. 
+                firebase.database().ref(`/${postObj.id}`).update(likeObj);
+            }else {
+                // since the post was not liked before we are creating a property of likes with
+                const likeObj ={
+                    likes:[
+                        user.id
+                    ]
+                }
+                setTestLikes(true)
+                firebase.database().ref(`/${postObj.id}`).update(likeObj);
             }
-            // update firebase database. 
-            firebase.database().ref(`/${postObj.id}`).update(likeObj);
-        }else {
-            // since the post was not liked before we are creating a property of likes with
-            const likeObj ={
-                likes:[
-                    user.id
-                ]
+        }
+        const unLikePost = (postObj)=>{
+            console.log('is it unliked?')
+            // remove the visitors id from the from the array of the liked ids. 
+            if(postObj.likes){
+                const unlikedArray = postObj.likes.filter(like=>{
+                    return like !== user.id
+                })
+                // creating an object with the rest of the array and then posting it in the database
+                const likeObj ={
+                    likes:unlikedArray
+                }
+                setTestLikes(false)
+                // console.log('is it unliked?:', testLike)
+                firebase.database().ref(`/${postObj.id}`).update(likeObj);
+            } else {
+                setTestLikes(false)
             }
-            firebase.database().ref(`/${postObj.id}`).update(likeObj);
         }
-    }
-    const unLikePost = (postObj)=>{
-        // remove the visitors id from the from the array of the liked ids. 
-        const unlikedArray = postObj.likes.filter(like=>{
-            return like !== user.id
-        })
-         // creating an object with the rest of the array and then posting it in the database
-        const likeObj ={
-            likes:unlikedArray
-        }
-        firebase.database().ref(`/${postObj.id}`).update(likeObj);
-    }
+     */
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -177,13 +193,9 @@ function Homepage() {
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
             })
-            console.log(sortedArr)
             setUsersPost(sortedArr)
-
-
             // getting the posts data from the users followers
             const usersFriendsPostsArray = []
-
             dataArray.forEach(obj=>{
                 //  first get data that has the type of followersPost
                 if(obj.dataType ==='followersPost'){
@@ -205,13 +217,10 @@ function Homepage() {
                             profileImg: other.profileImg,
                             id: other.id
                         } }
-                        console.log(posterObjt)
                         editedUsersFriendsPostsArray.push(posterObjt)
                     }
                 })
             })
-            console.log(editedUsersFriendsPostsArray)
-
             // sorting the array by posting order 
             const sortingFriendsPosts = editedUsersFriendsPostsArray.sort((a,b)=>{
                 let A = a.timeStamp
@@ -227,7 +236,6 @@ function Homepage() {
                 if(A.minutes > B.minutes) return -1
                 if(A.minutes < B.minutes) return 1
             })
-            console.log(sortingFriendsPosts)
 
             setFriendsPost(sortingFriendsPosts)
 
@@ -259,6 +267,9 @@ function Homepage() {
         })
     }, [])
     return (
+        
+            <>
+            <NavBar loggedInd={loggedInd}/>
         <section className="wrapper mainProfile">
             {homeModal?
             <div className="modalWindow">
@@ -267,7 +278,7 @@ function Homepage() {
                         <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                     </div>
                     {bioScreen ? <BioEdit user = {user} modalWindow={modalWindow}/> : null}
-                    {readMore ? <ReadPost postId={selectedPostId} post = {postObject} likePost={likePost} unLikePost={unLikePost}/> : null}
+                    {readMore ? <ReadPost postId={selectedPostId} post = {postObject} user={user}/> : null}
                     {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
                 </div>
             </div> 
@@ -306,7 +317,7 @@ function Homepage() {
                         <div className="posts">
                             { usersPost.length>0 ?
                             usersPost.map(post=>
-                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}  likePost={likePost} unLikePost={unLikePost}/>
+                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}  />
                             )
                             : 
                             <div className="card">
@@ -324,7 +335,7 @@ function Homepage() {
                             {
                             friendsPost.length>0 ?
                             friendsPost.map(post=>
-                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'} likePost={likePost} unLikePost={unLikePost}/>
+                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'} />
                             )
                             : 
                             <div className="card">
@@ -340,6 +351,8 @@ function Homepage() {
             </article>
 
         </section>
+        </>
+
     )
 }
 

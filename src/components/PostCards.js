@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import firebase from '../firebase.js'
-
+import LikeUnlike from './LikeUnlike'
 function PostCards(props) {
     const [postLiked, setPostLiked] = useState(false)
     const visitorId = localStorage.loggedUserId;
@@ -11,7 +11,6 @@ function PostCards(props) {
         const dbRef = firebase.database().ref();
         dbRef.child(id).remove()
     }
-
     useEffect(() => {
         const post = props.post
         // checking if the post is like by the user or not
@@ -67,26 +66,14 @@ function PostCards(props) {
             {/* unLikePost */}
             <div className="row">
                 <div className="likeSection" >
-                    {postLiked ?
+                    <LikeUnlike post={props.post} viewersId={visitorId}/>
                     <div className="row">
-                        <button className="likeBtnActive" 
-                        onClick={()=>props.unLikePost(props.post)}
-                        ><i className="fas fa-heart"></i></button>
-                        <p className="likeNum">
-                        {props.post.likes ? props.post.likes.length : null}
-                        </p>
+                        <button className="comment" onClick={()=>props.modalWindow('readMore', props.post.id, props.post)}>
+                            <i className="far fa-comment"></i> 
+                        </button>
+                        <p className="likeNum"> {props.post.comments?props.post.comments.length:null} </p>
+
                     </div>
-                    : 
-                    <div className="row">
-                        <button className="likeBtn" onClick={(e)=>props.likePost(props.post)}><i className="far fa-heart"></i></button>
-                        <p className="likeNum">
-                        {props.post.likes  ? props.post.likes.length : null}
-                        </p>
-                    </div>
-                    }
-                    <button className="comment" onClick={()=>props.modalWindow('readMore', props.post.id, props.post)}>
-                        <i className="far fa-comment"></i>
-                    </button>
                 </div>
             </div>
         </div>

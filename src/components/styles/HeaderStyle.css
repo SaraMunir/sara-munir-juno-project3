@@ -1,7 +1,15 @@
 
 header {
     min-height: 88vh;
-    /* position: relative; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+.loginBtnCntr{
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 .wrapper {
     width: 80%;
@@ -17,7 +25,7 @@ header {
     /* font-family: 'Abril Fatface', cursive; */
     text-transform: uppercase;
     font-family: 'Julius Sans One', sans-serif;
-    font-size: 5rem;
+    font-size: 7rem;
     color: #5b2dff;
     text-shadow: 15px 10px 0px #ff9f00 ;
     /* color: #ff9f00;
@@ -50,20 +58,16 @@ header {
     overflow: auto;
 }
 .modalWindowCntr {
-    background: #f2eef7;
-    background: #f2eef7;
-    width: 50%;
+    background: #e5e0ec;
+    width: 65%;
     min-height: 65vh;
     margin: 0 auto;
     border-radius: 10px;
     text-align: center;
     padding: 35px;
-    
     position: relative;
-
     justify-content: center;
     overflow: auto;
-
 }
 
 .modalCloseBtn{
@@ -81,6 +85,7 @@ header {
 .heroImg{
     width: 50%;
     object-fit: cover;
+    margin-top: 127px;
 }
 
 @media (max-width: 1050px) {
@@ -91,6 +96,11 @@ header {
 @media (max-width: 900px) {
     .modalWindowCntr {
         width: 70%;
+    }
+}
+@media (max-width: 600px) {
+    .heroText h1{
+        font-size: 4rem;
     }
 }
 

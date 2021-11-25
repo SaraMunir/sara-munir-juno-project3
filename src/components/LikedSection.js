@@ -1,9 +1,10 @@
 import React from 'react'
 
 function LikedSection(props) {
+    console.log(props.testLike)
     return (
         <div>
-            {props.postLiked ?
+            {props.postLiked || props.testLike ?
             <div className="row">
                 <button className="likeBtnActive" 
                 onClick={()=>props.unLikePost(props.post)}
@@ -20,6 +21,7 @@ function LikedSection(props) {
                 </p>
             </div>
             }
+            {props.testLike}
         </div>
     )
 }

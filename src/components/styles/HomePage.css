@@ -71,6 +71,15 @@ aside {
     margin-bottom: 15px;
     position: relative;
 }
+.commentCard {
+    width: 100%;
+    background: #f3f3fa;
+    padding: 0px 20px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    position: relative;
+    text-align: left;
+}
 .editBtn {
     position: absolute;
     top: 20px;
@@ -208,15 +217,18 @@ aside {
     border-top-left-radius: 0px;
 }
 .postersCntr{
+    color: #4c4a64;
     display: flex;
     flex-direction: row;
     align-items: center;
     font-style: italic;
+    font-size: .8rem;
+    text-transform: capitalize;
 }
 
 .smallThmbNail {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 8px;
@@ -260,6 +272,9 @@ aside {
     background: white;
     padding: 15px;
     border-radius: 6px;
+}
+.postContent{
+    min-height: 65px;
 }
 
 

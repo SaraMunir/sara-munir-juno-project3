@@ -3,16 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import SearchBar from './SearchBar'
 import './styles/NavStyle.css'
-const loggedInd = localStorage.loggedInd
+// const loggedInd = localStorage.loggedInd
 
-function NavBar() {
+function NavBar(props) {
     let navigate = useNavigate();
-
     const [menuBtn, setMenuBtn]=useState(false)
     const logOut = ()=>{
         localStorage.clear();
         navigate(`/`);
-        document.location.reload(true);
     }
     const redirectTo=()=>{
         navigate(`/Homepage`);
@@ -26,7 +24,7 @@ function NavBar() {
         <nav className="wrapper">
             {
                 // only users who are logged in will be able to see the nav menu
-                loggedInd ?
+                props.loggedInd ?
                 <div className="navContainer">
                     {/* search bar to find other users */}
                     <SearchBar/>

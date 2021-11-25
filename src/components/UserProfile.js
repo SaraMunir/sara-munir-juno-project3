@@ -4,10 +4,13 @@ import {  useParams } from "react-router-dom";
 import Profile from './Profile';
 import PostCards from './PostCards';
 import ReadPost from './ReadPost';
+import NavBar from './NavBar';
 
 let selectedPostId;
 
 function UserProfile(props) {
+    const loggedInd = localStorage.loggedInd;
+
     const visitorId = localStorage.loggedUserId;
     const email = localStorage.emailAddress;
     const { userId } = useParams();
@@ -31,7 +34,6 @@ function UserProfile(props) {
     const [post, setPost] = useState({
         postText: ''
     });
-
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -42,7 +44,6 @@ function UserProfile(props) {
             setReadMore(true)
             selectedPostId = id;
             setPostObject(obj)
-
         }
     }
     const postOnUsersWalls=(e)=>{
@@ -149,40 +150,6 @@ function UserProfile(props) {
         // myFriendsThoughts
     }
 
-    const likePost = (postObj)=>{
-        // check if the post had been liked before or not
-        if(postObj.likes){
-            // if liked we have to copy the likes in a new array constant
-            const newList = [...postObj.likes];
-            // add the visitors id to the like array
-            newList.push(visitorId)
-            // create an object with the new array
-            const likeObj ={
-                likes:newList
-            }
-            // update firebase database. 
-            firebase.database().ref(`/${postObj.id}`).update(likeObj);
-        }else {
-            // since the post was not liked before we are creating a property of likes with
-            const likeObj ={
-                likes:[
-                    visitor.id
-                ]
-            }
-            firebase.database().ref(`/${postObj.id}`).update(likeObj);
-        }
-    }
-    const unLikePost = (postObj)=>{
-        // remove the visitors id from the from the array of the liked ids. 
-        const unlikedArray = postObj.likes.filter(like=>{
-            return like !== visitorId
-        })
-         // creating an object with the rest of the array and then posting it in the database
-        const likeObj ={
-            likes:unlikedArray
-        }
-        firebase.database().ref(`/${postObj.id}`).update(likeObj);
-    }
     // getting data for both users and the visitors
     useEffect(() => {
         // getting the users data who's profile viewer is viewing. 
@@ -319,7 +286,11 @@ function UserProfile(props) {
     }, [])
 
     return (
+            <>
+            <NavBar loggedInd={loggedInd}/>
+
         <section className="wrapper mainProfile">
+
             {
                 homeModal?
                 <div className="modalWindow">
@@ -328,7 +299,7 @@ function UserProfile(props) {
                             <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                         </div>
                         {readMore ? 
-                        <ReadPost postId={selectedPostId} post={postObject} isPersonFollowingUser={isPersonFollowingUser}  likePost={likePost} unLikePost={unLikePost} userId={visitorId}/> 
+                        <ReadPost postId={selectedPostId} post={postObject} isPersonFollowingUser={isPersonFollowingUser} userId={visitorId}/> 
                         : null}
                     </div>
                 </div> 
@@ -372,9 +343,7 @@ function UserProfile(props) {
                 <div className="posts">
                     { usersPost.length>0 ?
                     usersPost.map(post=>
-                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}  likePost={likePost}
-                        unLikePost={unLikePost}
-                        />
+                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}/>
                     )
                     : 
                     <div className="card">
@@ -389,9 +358,7 @@ function UserProfile(props) {
                     {
                     usersFriendsPost.length>0 ?
                     usersFriendsPost.map(post=>
-                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'} likePost={likePost}
-                        unLikePost={unLikePost}
-                        />
+                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}/>
                     )
                     : 
                     <div className="card">
@@ -404,6 +371,8 @@ function UserProfile(props) {
             </div>
             </article>
         </section>
+        </>
+
     )
 }
 

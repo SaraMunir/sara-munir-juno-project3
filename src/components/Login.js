@@ -1,8 +1,12 @@
 import  {useState, useEffect, useRef} from 'react'
 import firebase from '../firebase';
 import loadingIcon from './assets/Bars-1s-200px.gif'
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+
+    let navigate = useNavigate();
+
     const [user, setUser] = useState({
         emailAddress: '', password: ''
     })
@@ -37,7 +41,6 @@ function Login() {
         }
         let userFound = false
         // find user from the users object by email and then check if password match. 
-        console.log('users: ', users)
         if (users.length>0){
             users.forEach(eachUser=>{
                 if (eachUser.emailAddress === user.emailAddress){
@@ -51,9 +54,10 @@ function Login() {
                         localStorage.setItem("emailAddress", user.emailAddress)
                         setUser({ emailAddress: '', password: ''})
                         setIsLoggedIn(true); 
-                        setTimeout( function(){ 
-                            document.location.reload(true);
-                        }, 1500 );
+                        // document.location.reload(true);
+                        navigate(`/Homepage`);
+                        // setTimeout( function(){ 
+                        // }, 1500 );
                     }else {
                         // if password doesnt match print out alert
                         setAlert( { show: true, alertText: 'Password inccorrect' } );
@@ -86,6 +90,7 @@ function Login() {
 
     return (
         <div className="modalCntr">
+ 
                 {
                     isLoggedIn ?
                 <>
