@@ -10,7 +10,6 @@ let selectedPostId;
 
 function UserProfile(props) {
     const loggedInd = localStorage.loggedInd;
-
     const visitorId = localStorage.loggedUserId;
     const email = localStorage.emailAddress;
     const { userId } = useParams();
@@ -46,6 +45,7 @@ function UserProfile(props) {
             setPostObject(obj)
         }
     }
+    // function to post on wall. 
     const postOnUsersWalls=(e)=>{
         e.preventDefault();
         if(post.postText){
@@ -137,17 +137,18 @@ function UserProfile(props) {
         firebase.database().ref(`/${visitor.id}`).update(followingObject)
 
     }
-
+    // toggling between wall posts
     const toggleTabs= (tab)=>{
+        // users Thoughts
         if (tab === 'myThoughts'){
             setUsersThoughtPosts(true);
             setUsersFriendsPosts(false);
         }
+        // users Friends Thoughts
         if (tab === 'myFriendsThoughts'){
             setUsersFriendsPosts(true);
             setUsersThoughtPosts(false);
         }
-        // myFriendsThoughts
     }
 
     // getting data for both users and the visitors
@@ -288,14 +289,13 @@ function UserProfile(props) {
     return (
             <>
             <NavBar loggedInd={loggedInd}/>
-
         <section className="wrapper mainProfile">
-
             {
                 homeModal?
                 <div className="modalWindow">
                     <div className="modalWindowCntr">
                         <div className="row jstfyCntEnd">
+                            {/* to close modal windo */}
                             <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
                         </div>
                         {readMore ? 

@@ -1,5 +1,5 @@
 import { useState} from 'react';
-import { Navigate  } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import './styles/HeaderStyle.css'
 import heroImage from './assets/5848200.png'
@@ -8,18 +8,22 @@ import SignUp from './SignUp';
 
 function LandingPage() {
 
+    const isLoggedIn = localStorage.loggedInd;
     const [modalOpen, setModalOpen]= useState(false);
     const [login, setLoging]= useState(false);
     const [signUp, setSignUp]= useState(false);
-
+    
+    
     const modalWindow = (type)=>{
         if ( modalOpen === false ){
             setModalOpen(true)
             if (type === 'logIn'){
+                // when user selects login the modal for the login form opens up 
                 setLoging(true)
                 setSignUp(false)
             }
             if (type === 'signUp'){
+                // when user selects sign up the modal for the sign up form opens up 
                 setSignUp(true)
                 setLoging(false)
             }
@@ -29,6 +33,8 @@ function LandingPage() {
     }
     return (
         <header>
+        { isLoggedIn == "true" ? <Navigate to='/Homepage' /> : null }
+
             <div className="row jstfyCntEnd wrapper loginBtnCntr">
                 <button className="initialBtnSettng specialBtn btnPurple" onClick={()=>modalWindow('logIn')}>Log in</button>
             </div>
@@ -47,6 +53,7 @@ function LandingPage() {
                     <div className="row jstfyCntEnd">
                         <button className="modalCloseBtn" onClick={()=>modalWindow()}><i className="fas fa-2x fa-times"></i></button>
                     </div>
+                    {/* forms */}
                     { login ? <Login/> : null }
                     { signUp ? <SignUp/> : null }
                 </div>

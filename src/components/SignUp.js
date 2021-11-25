@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import firebase from '../firebase';
 
 function SignUp() {
+    // to redirect user once they log in to their profile/homepage
+
     let navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -15,7 +17,6 @@ function SignUp() {
         show: false, alertText: ''
     })
     const [ isLoggedIn, setIsLoggedIn ] = useState( false );
-
     const inputEmail = useRef();
     const inputName = useRef();
     const inputPassword = useRef();

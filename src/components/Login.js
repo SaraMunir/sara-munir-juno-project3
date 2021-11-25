@@ -4,9 +4,8 @@ import loadingIcon from './assets/Bars-1s-200px.gif'
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-
+    // to redirect user once they log in to their profile/homepage
     let navigate = useNavigate();
-
     const [user, setUser] = useState({
         emailAddress: '', password: ''
     })
