@@ -14,14 +14,14 @@ function App() {
       <NavBar/>
         <Routes>
           {/* landing or welcome page for new users where they can sign up or log in */}
-          <Route exact path='/' element={<LandingPage/>}/>
-          <Route exact path='/Welcome' element={<LandingPage/>}/>
+          <Route path='/' element={<LandingPage/>}/>
+          <Route path='/Welcome' element={<LandingPage/>}/>
 
           {/* users homepage once they are logged in*/}
           <Route path='/Homepage' element={<Homepage/>}/>
 
           {/* other users profile page */}
-          <Route exact path='/userProfile/:userName/:userId' element={<UserProfile/>}/>
+          <Route path='/userProfile/:userName/:userId' element={<UserProfile/>}/>
         </Routes>
       </Router>
       <footer>

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
+import {Link} from 'react-router-dom'
+
+
 
 function Profile(props) {
     const usersFollowers = props.usersFollowers
@@ -58,7 +61,10 @@ function Profile(props) {
                 <div className='friendsGalleryThumb'>
                     {usersFollowers.length >0 ?
                         usersFollowers.map(follwer=>
+
+                            <Link to={`/userProfile/${follwer.fullName}/${follwer.id}`} >
                             <img title={follwer.fullName} key={follwer.id} src={follwer.profileImg ? follwer.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt={follwer.fullName} />
+                            </Link>
                             )
                         :
                         <h4>No followers yet</h4>
@@ -71,7 +77,9 @@ function Profile(props) {
                 <div className='friendsGalleryThumb'>
                     {usersFollowings.length >0 ?
                         usersFollowings.map(follwer=>
+                            <Link to={`/userProfile/${follwer.fullName}/${follwer.id}`} >
                             <img title={follwer.fullName} key={follwer.id} src={follwer.profileImg ? follwer.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt={follwer.fullName} />
+                            </Link>
                             )
                         :
                         <h4>Not following anyone</h4>

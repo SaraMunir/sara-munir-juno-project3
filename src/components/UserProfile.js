@@ -5,6 +5,8 @@ import Profile from './Profile';
 import PostCards from './PostCards';
 import ReadPost from './ReadPost';
 import NavBar from './NavBar';
+import { Navigate } from 'react-router-dom';
+
 
 let selectedPostId;
 
@@ -264,7 +266,7 @@ function UserProfile(props) {
             setUsersFollowers(userFollowersArr)
             setUsersFollowings(userFollowingArr)
         })
-    }, [])
+    }, [userId])
 
     // getting the users posts data's 
     useEffect(() => {
@@ -284,10 +286,12 @@ function UserProfile(props) {
             })
             setUserPost(usersPost)
         })
-    }, [])
+    }, [userId])
 
     return (
             <>
+
+            {visitorId === userId ? <Navigate to='/Homepage' /> : null }
             <NavBar loggedInd={loggedInd}/>
         <section className="wrapper mainProfile">
             {
