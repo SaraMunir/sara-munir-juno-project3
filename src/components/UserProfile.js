@@ -6,7 +6,7 @@ import PostCards from './PostCards';
 import ReadPost from './ReadPost';
 import NavBar from './NavBar';
 import { Navigate } from 'react-router-dom';
-
+import { v4 as uuidv4 } from 'uuid';
 
 let selectedPostId;
 
@@ -30,6 +30,8 @@ function UserProfile(props) {
     const [usersThoughtPosts, setUsersThoughtPosts] = useState(true)
     const [usersFriendsPosts, setUsersFriendsPosts] = useState(false);
     const [postObject, setPostObject] = useState({})
+
+    const id = uuidv4();
 
 
     const [post, setPost] = useState({
@@ -63,13 +65,24 @@ function UserProfile(props) {
 
         //  creating the post as an object with users id so that i can pull data based on the id
             const postObject ={
+                postId: id,
                 dataType: 'followersPost',
                 userId: userId,
                 posts: post.postText, 
                 timeStamp: dateTime,
                 postersId: visitor.id
             }
+            const postNotification = {
+                dataType: 'notification',
+                userId: userId,
+                posts: post.postText, 
+                timeStamp: dateTime,
+                postersId: visitor.id,
+                postId: id,
+                read: false
+            }
             dbRef.push(postObject);
+            dbRef.push(postNotification);
             setPost({postText: ''})
         }
 
@@ -292,7 +305,7 @@ function UserProfile(props) {
             <>
 
             {visitorId === userId ? <Navigate to='/Homepage' /> : null }
-            <NavBar loggedInd={loggedInd}/>
+            {/* <NavBar loggedInd={loggedInd} /> */}
         <section className="wrapper mainProfile">
             {
                 homeModal?
@@ -371,7 +384,6 @@ function UserProfile(props) {
                     }
                 </div> : ''
             }
-
             </div>
             </article>
         </section>
@@ -379,5 +391,6 @@ function UserProfile(props) {
 
     )
 }
+
 
 export default UserProfile

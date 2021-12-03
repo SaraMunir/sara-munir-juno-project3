@@ -11,3 +11,30 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.normalTile {
+  background-color: white;
+  color: black;
+  padding: 20px;
+  border: 1px solid grey;
+}
+.myColor{
+  background: rgb(45, 218, 224);
+}
+.react-calendar__navigation{
+  background-color: pink;
+  padding: 10px 0;
+}
+/* .react-calendar__navigation__arrow  */
+.react-calendar__navigation__prev2-button, .react-calendar__navigation__arrow  {
+  padding: 20px;
+  font-size: 2rem;
+  border: 1px solid purple;
+  cursor: pointer;
+}
+.react-calendar__month-view__weekdays__weekday{
+  padding: 20px;
+  border: 1px solid rgb(29, 192, 204);
+  background-color: rgb(185, 233, 236);
+
+}

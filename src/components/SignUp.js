@@ -1,12 +1,11 @@
 import {useState, useEffect, useRef} from 'react';
 import loadingIcon from './assets/Bars-1s-200px.gif'
 import { useNavigate } from "react-router-dom";
-
+import bcrypt from 'bcryptjs'
 import firebase from '../firebase';
 
 function SignUp() {
     // to redirect user once they log in to their profile/homepage
-
     let navigate = useNavigate();
 
     const [user, setUser] = useState({
@@ -20,6 +19,10 @@ function SignUp() {
     const inputEmail = useRef();
     const inputName = useRef();
     const inputPassword = useRef();
+
+
+    const salt = bcrypt.genSaltSync(10)
+
 
     const handleInput = (e)=>{
         const { id, value } = e.target;
@@ -64,13 +67,21 @@ function SignUp() {
             //  we proceed to create an account. 
             setAlert( { show: false, alertText: '' } );
             const dbRef = firebase.database().ref();
-            dbRef.push(user);
+        
+
+            console.log('password: ', user.password)
+            const hashedPassword = bcrypt.hashSync(user.password, '$2a$10$CwTycUXWue0Thq9StjUM0u') // hash created previously created upo
+            console.log('hashedPassword: ', hashedPassword)
+
+
+
+            // dbRef.push(user);
             // we save the
-            localStorage.setItem("loggedInd", true);
-            localStorage.setItem("emailAddress", user.emailAddress);
-            setUser({...user, fullName: '', emailAddress: '', password: ''})
-            setIsLoggedIn(true); 
-            navigate(`/Homepage`);
+            // localStorage.setItem("loggedInd", true);
+            // localStorage.setItem("emailAddress", user.emailAddress);
+            // setUser({...user, fullName: '', emailAddress: '', password: ''})
+            // setIsLoggedIn(true); 
+            // navigate(`/Homepage`);
         }
     }
     useEffect(() => {
@@ -86,7 +97,6 @@ function SignUp() {
             setUsers(dataArray)
         })
     }, [])
-
     return (
         <div className="modalCntr">
             {

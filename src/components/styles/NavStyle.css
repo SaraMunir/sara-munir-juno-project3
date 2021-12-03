@@ -27,6 +27,34 @@ li {
     cursor: pointer;
     color:#5b2dff;
     transition: .4s;
+    position: relative;
+}
+.notificationNum{
+    background-color: #ff9f00;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    font-size: .7rem;
+    border: 2px solid white;
+}
+.notNum{
+    background-color: #ff9f00;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+
+    /* border-radius: 50%; */
+
 }
 .profileMenuBtn:hover, .profileMenuBtn:focus {
     color:#ff9f00;

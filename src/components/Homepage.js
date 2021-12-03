@@ -7,11 +7,13 @@ import BioEdit from './BioEdit';
 import ReadPost from './ReadPost';
 import UploadChangeProPic from './UploadChangeProPic';
 import Profile from './Profile';
-import NavBar from './NavBar';
 
 function Homepage() {
     const usersEmail = localStorage.emailAddress;
     const loggedInd = localStorage.loggedInd;
+    const usersId = localStorage.loggedUserId;
+
+    
     let userId
     // 🚨 ⚠️ im keeping the below comment because i tried to use the state to replace user id but it doesnt work as useState does not work in this case and userId woked. 
     // 🚨 ⚠️ const [userId, setUserId] =useState('')
@@ -143,7 +145,6 @@ function Homepage() {
             setMyThoughtPosts(false);
         }
     }
-
     useEffect(() => {
         const dbRef = firebase.database().ref();
         dbRef.on('value', (response)=>{
@@ -267,9 +268,7 @@ function Homepage() {
         })
     }, [])
     return (
-        
-            <>
-            <NavBar loggedInd={loggedInd}/>
+        <>
         <section className="wrapper mainProfile">
             {homeModal?
             <div className="modalWindow">

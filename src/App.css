@@ -179,6 +179,7 @@ aside {
   margin: 30px auto;
 }
 
-
-
-
+.calendarCntr{
+  width: 70%;
+  margin: 0 auto;
+}
