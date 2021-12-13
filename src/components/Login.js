@@ -2,6 +2,7 @@ import  {useState, useEffect, useRef} from 'react'
 import firebase from '../firebase';
 import loadingIcon from './assets/Bars-1s-200px.gif'
 import { useNavigate } from "react-router-dom";
+import bcrypt from 'bcryptjs'
 
 function Login() {
     // to redirect user once they log in to their profile/homepage
@@ -22,7 +23,6 @@ function Login() {
         const { id, value } = e.target;
         setUser({...user, [id]: value})
     }
-
     const handleLogInSubmit = (event) => {
         // prevent reload
         event.preventDefault();
@@ -44,34 +44,63 @@ function Login() {
             users.forEach(eachUser=>{
                 if (eachUser.emailAddress === user.emailAddress){
                     userFound = true
-                    // if user email matches check if password matches
-                    if (eachUser.password === user.password){
-                        // if password matches print out alert
-                        setAlert( { show: true, alertText: 'Success loggin In' } );
-                        // log in user state and redirect to homepage
-                        localStorage.setItem("loggedInd", true);
-                        localStorage.setItem("emailAddress", user.emailAddress)
-                        setUser({ emailAddress: '', password: ''})
-                        setIsLoggedIn(true); 
-                        // document.location.reload(true);
-                        navigate(`/Homepage`);
-                        // setTimeout( function(){ 
-                        // }, 1500 );
+                    // check if the passwords are hasshed or not 
+                    if (eachUser.hashed){
+                        // if user email matches check if password matches
+                        const isPassWordCorrect =bcrypt.compareSync(user.password, eachUser.password)
+                        if(isPassWordCorrect){
+                            setAlert( { show: true, alertText: 'Success loggin In' } );
+                            // const saltRounds = 10;
+                            // const hashedEmail = bcrypt.hashSync(user.emailAddress, saltRounds);
+
+                            // log in user state and redirect to homepage
+                            localStorage.setItem("loggedInd", true);
+                            localStorage.setItem("emailAddress", user.emailAddress)
+                            // localStorage.setItem("smile", hashedEmail)
+                            setUser({ emailAddress: '', password: ''})
+                            setIsLoggedIn(true); 
+                            setTimeout( function(){ 
+                                navigate(`/Homepage`);
+                            }, 1500 );
+                        }else {
+                             // if password doesnt match print out alert
+                            inputPassword.current.focus();
+                            setAlert( { show: true, alertText: 'Password inccorrect' } );
+                            return
+                        }
                     }else {
-                        // if password doesnt match print out alert
-                        setAlert( { show: true, alertText: 'Password inccorrect' } );
-                        return
+                        // if user email matches check if password matches
+
+                        if (eachUser.password === user.password){
+                            // const saltRounds = 10;
+                            // const hashedEmail = bcrypt.hashSync(user.emailAddress, saltRounds);
+                            // if password matches print out alert
+                            setAlert( { show: true, alertText: 'Success loggin In' } );
+                            // log in user state and redirect to homepage
+                            localStorage.setItem("loggedInd", true);
+                            localStorage.setItem("emailAddress", user.emailAddress)
+                            // localStorage.setItem("smile", hashedEmail)
+
+                            setUser({ emailAddress: '', password: ''})
+                            setIsLoggedIn(true); 
+                            setTimeout( function(){ 
+                                navigate(`/Homepage`);
+                            }, 1500 );
+                        }else {
+                            // if password doesnt match print out alert
+                            inputPassword.current.focus();
+                            setAlert( { show: true, alertText: 'Password inccorrect' } );
+                            return
+                        }
                     }
                 } 
                 if (userFound === false){
-                    console.log('user not found');
                     setAlert( { show: true, alertText: 'Sorry no user associated with this email address. please signup' } );
                 }
             })
         }else {
             setAlert( { show: true, alertText: 'Sorry no user associated with this email address found. please signup?' } );
         }
-
     }
     useEffect(() => {
         // loading users 
@@ -86,7 +115,6 @@ function Login() {
             setUsers(dataArray)
         })
     }, [])
-
     return (
         <div className="modalCntr">
                 {
@@ -117,16 +145,20 @@ function Login() {
                             value={user.password}
                             />
                         </div>
-                        { alert.show ? 
-                        <div className="alertBox">
-                            <p>{alert.alertText}</p>
-                        </div>
-                        : null
+                        { 
+                            alert.show ? 
+                                <div className="alertBox">
+                                    <p>{alert.alertText}</p>
+                                </div>
+                            : null
                         }
                         <div className="row jstfyCntCenter">
                             <button className="initialBtnSettng submitBtn">Log In</button>
                         </div>
                     </form>
+                    <div className="row jstfyCntCenter">
+                        <button className="initialBtnSettng submitBtn">Forgot Password?</button>
+                    </div>
                 </>
                 }
         </div>

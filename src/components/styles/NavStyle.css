@@ -47,14 +47,25 @@ li {
     font-size: .7rem;
     border: 2px solid white;
 }
+.notifCntr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .notNum{
-    background-color: #ff9f00;
-    color: white;
-    padding: 5px 10px;
+    background: #ff9f00;
     border-radius: 50%;
-
-    /* border-radius: 50%; */
-
+    font-size: .9rem;
+    width: 20px;
+    height: 20px;
+    color: white;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 5px;
 }
 .profileMenuBtn:hover, .profileMenuBtn:focus {
     color:#ff9f00;

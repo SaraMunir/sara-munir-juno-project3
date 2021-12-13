@@ -74,8 +74,9 @@ function UserProfile(props) {
             }
             const postNotification = {
                 dataType: 'notification',
+                type: 'followersPost',
                 userId: userId,
-                posts: post.postText, 
+                posts: post.postText,
                 timeStamp: dateTime,
                 postersId: visitor.id,
                 postId: id,
@@ -85,7 +86,6 @@ function UserProfile(props) {
             dbRef.push(postNotification);
             setPost({postText: ''})
         }
-
     }
     const followUser = ()=>{
         // once clicked the person who is ffolloing will be added to the persons followers list as well as  to their own list of following
@@ -303,8 +303,12 @@ function UserProfile(props) {
 
     return (
             <>
+                    <NavBar/>
+
 
             {visitorId === userId ? <Navigate to='/Homepage' /> : null }
+            { loggedInd === "false" ||  !loggedInd?  <Navigate to='/' /> : null }
+
             {/* <NavBar loggedInd={loggedInd} /> */}
         <section className="wrapper mainProfile">
             {

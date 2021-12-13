@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
-
+import { Link, Navigate } from "react-router-dom";
+import {useFetchAllUser} from './hooks'
 import firebase from '../firebase';
+import NavBar from './NavBar';
 
 function Notification() {
+    const isLoggedIn = localStorage.loggedInd;
+    const [allUsers] = useFetchAllUser()
     const userId = localStorage.loggedUserId;    
     const [not, setNots] = useState([])
     const deleteNotification=(e)=>{
@@ -13,6 +16,7 @@ function Notification() {
         // getting the viewers data as well
         firebase.database().ref().orderByChild('dataType').equalTo('notification').on('value', (response)=>{
             const data = response.val();
+
             const dataArray = []
             for (let key in data) {
                 // making sure to add the id inside the object as well.
@@ -42,20 +46,41 @@ function Notification() {
             setNots(sortingArrays)
         })
     }, [])
+
     return (
+        <>
+        <NavBar/>
         <section className="notificationContainer wrapper">
+        { isLoggedIn !== "true" ? <Navigate to='/' /> : null }
             <ul>
                 {
                     not.length>0 ?
                     not.map(notif=>
                     <li key={notif.id} id={notif.id} onClick={deleteNotification} >
-                        {notif.posts}
+                        <p>{notif.posts}</p>
+                        <p>{notif.type}</p>
+                        <p>posted by {
+                            allUsers.map(user=>
+                                user.id === notif.postersId ? 
+                                <div>
+                                    {user.fullName} 
+                                </div>
+                                : null
+                                )
+                        }
+                        </p>
+                        
                     </li>
                     )
                     : null
                 }
             </ul>
+            <ul>
+
+            </ul>
         </section>
+        </>
+
     )
 }
 export default Notification

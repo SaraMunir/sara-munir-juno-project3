@@ -7,9 +7,13 @@ import BioEdit from './BioEdit';
 import ReadPost from './ReadPost';
 import UploadChangeProPic from './UploadChangeProPic';
 import Profile from './Profile';
+import NavBar from './NavBar';
+import bcrypt from 'bcryptjs'
+
 
 function Homepage() {
     const usersEmail = localStorage.emailAddress;
+    const usersEmail2 = localStorage.smile;
     const loggedInd = localStorage.loggedInd;
     const usersId = localStorage.loggedUserId;
 
@@ -37,53 +41,7 @@ function Homepage() {
     // 
     // const [testLike, setTestLikes] = useState(false)
 
-    /**
-     * ⚠️ need this code for later reference
-        const likePost = (postObj)=>{
-            console.log('clicked in homepage')
-            // check if the post had been liked before or not
-            if(postObj.likes){
-                // if liked we have to copy the likes in a new array constant
-                const newList = [...postObj.likes];
-                // add the visitors id to the like array
-                newList.push(user.id)
-                // create an object with the new array
-                const likeObj ={
-                    likes:newList
-                }
-                setTestLikes(true)
-                // update firebase database. 
-                firebase.database().ref(`/${postObj.id}`).update(likeObj);
-            }else {
-                // since the post was not liked before we are creating a property of likes with
-                const likeObj ={
-                    likes:[
-                        user.id
-                    ]
-                }
-                setTestLikes(true)
-                firebase.database().ref(`/${postObj.id}`).update(likeObj);
-            }
-        }
-        const unLikePost = (postObj)=>{
-            console.log('is it unliked?')
-            // remove the visitors id from the from the array of the liked ids. 
-            if(postObj.likes){
-                const unlikedArray = postObj.likes.filter(like=>{
-                    return like !== user.id
-                })
-                // creating an object with the rest of the array and then posting it in the database
-                const likeObj ={
-                    likes:unlikedArray
-                }
-                setTestLikes(false)
-                // console.log('is it unliked?:', testLike)
-                firebase.database().ref(`/${postObj.id}`).update(likeObj);
-            } else {
-                setTestLikes(false)
-            }
-        }
-     */
+   
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
@@ -158,13 +116,38 @@ function Homepage() {
             }
             // console.log(dataArray) this is working 
             // getting data only for the user from the email address that's stored in the local storage
-            let userData 
+            let userData;
+            let findEmail = false
+            
             dataArray.forEach(user=>{
-                if(user.emailAddress === usersEmail){
-                    userId =user.id
-                    localStorage.setItem("loggedUserId",  user.id);
-                    userData=user
-                    setUser(user);
+                // console.log(usersEmail2)
+                // console.log(user.emailAddress)
+                if (user.dataType === "userAccounts"){
+                    // for security its too complicated
+                    // // console.log('isEmailSame, ',bcrypt.compareSync(user.emailAddress, usersEmail2))
+                    // const isEmailSame = bcrypt.compareSync(user.emailAddress, usersEmail2)
+                    // if (isEmailSame){
+                    //     // if(isEmailSame===true){,
+                    //         userId =user.id
+                    //         const saltRounds = 10;
+                    //         const hashedUserId = bcrypt.hashSync(user.id, saltRounds);
+                    //         localStorage.setItem("loggedUserId",  user.id);
+                    //         localStorage.setItem("hashedUserId",  hashedUserId);
+                    //         userData=user
+                    //         setUser(user);
+                    //     // }
+
+                    // }
+
+                    if(user.emailAddress === usersEmail){
+                        userId =user.id
+                        const saltRounds = 10;
+                        const hashedUserId = bcrypt.hashSync(user.id, saltRounds);
+                        localStorage.setItem("loggedUserId",  user.id);
+                        localStorage.setItem("hashedUserId",  hashedUserId);
+                        userData=user
+                        setUser(user);
+                    }
                 }
             })
             
@@ -269,87 +252,87 @@ function Homepage() {
     }, [])
     return (
         <>
-        <section className="wrapper mainProfile">
-            {homeModal?
-            <div className="modalWindow">
-                <div className="modalWindowCntr">
-                    <div className="row jstfyCntEnd">
-                        <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
+        <NavBar/>
+            <section className="wrapper mainProfile">
+                {homeModal?
+                <div className="modalWindow">
+                    <div className="modalWindowCntr">
+                        <div className="row jstfyCntEnd">
+                            <button className="modalCloseBtn" onClick={modalWindow}><i className="fas fa-2x fa-times"></i></button>
+                        </div>
+                        {bioScreen ? <BioEdit user = {user} modalWindow={modalWindow}/> : null}
+                        {readMore ? <ReadPost postId={selectedPostId} post = {postObject} user={user}/> : null}
+                        {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
                     </div>
-                    {bioScreen ? <BioEdit user = {user} modalWindow={modalWindow}/> : null}
-                    {readMore ? <ReadPost postId={selectedPostId} post = {postObject} user={user}/> : null}
-                    {uploadPic ? <UploadChangeProPic userId={userId} user={user}  modalWindow={modalWindow}/> : null}
-                </div>
-            </div> 
-            : null
-            }
-            { loggedInd === "false" ||  !loggedInd?  <Navigate to='/Welcome'/> :  null}
-            <aside>
-                <Profile user={user} modalWindow={modalWindow} profileType = {'user'} usersFollowers={usersFollowers} usersFollowings={usersFollowings}/>
-            </aside>
-            {/* <Wall user={user} userId={userId} usersPost={usersPost}/> */}
-            <article className="wall">
-                {/* posting users thought input */}
-                <form className="card postForm" onSubmit={postMyThought}>
-                    <label htmlFor="postText" hidden>post your thought</label>
-                    <textarea 
-                    id="postText" 
-                    name="post" rows="4" cols="50"
-                    onChange={handleInputPost}
-                    value={post.postText}
-                    placeholder="Share your thoughts"
-                    >
-                    </textarea>
-                    <div className="row jstfyCntEnd">
-                        <button className={post.postText ? "postBtn" : "postBtn postBtnGrey" }>post</button>
+                </div> 
+                : null
+                }
+                { loggedInd === "false" ||  !loggedInd?  <Navigate to='/Welcome'/> :  null}
+                <aside>
+                    <Profile user={user} modalWindow={modalWindow} profileType = {'user'} usersFollowers={usersFollowers} usersFollowings={usersFollowings}/>
+                </aside>
+                {/* <Wall user={user} userId={userId} usersPost={usersPost}/> */}
+                <article className="wall">
+                    {/* posting users thought input */}
+                    <form className="card postForm" onSubmit={postMyThought}>
+                        <label htmlFor="postText" hidden>post your thought</label>
+                        <textarea 
+                        id="postText" 
+                        name="post" rows="4" cols="50"
+                        onChange={handleInputPost}
+                        value={post.postText}
+                        placeholder="Share your thoughts"
+                        >
+                        </textarea>
+                        <div className="row jstfyCntEnd">
+                            <button className={post.postText ? "postBtn" : "postBtn postBtnGrey" }>post</button>
+                        </div>
+                    </form>
+                    {/* rendering all the posts from users and followers */}
+                    <ul className="tabBar">
+                        <li>
+                            <button className={myThoughtPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myThoughts')}>My Thoughts</button></li>
+                        <li><button className={myFriendsPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myFriendsThoughts')}>My Followers thoughts</button></li>
+                    </ul>
+                    <div className="thoughtCntr">
+                        {
+                            myThoughtPosts ?
+                            <div className="posts">
+                                { usersPost.length>0 ?
+                                usersPost.map(post=>
+                                    <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}  />
+                                )
+                                : 
+                                <div className="card">
+                                <p>Share your first post</p>
+                                    <div className="likeStuf">
+                                        <button><i className="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                                }
+                            </div> : ''
+                        }
+                        {
+                            myFriendsPosts ?
+                            <div className="posts">
+                                {
+                                friendsPost.length>0 ?
+                                friendsPost.map(post=>
+                                    <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'} />
+                                )
+                                : 
+                                <div className="card">
+                                <p>No Posts yet</p>
+                                    <div className="likeStuf">
+                                        <button><i className="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                                }
+                            </div> : ''
+                        }
                     </div>
-                </form>
-                {/* rendering all the posts from users and followers */}
-                <ul className="tabBar">
-                    <li>
-                        <button className={myThoughtPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myThoughts')}>My Thoughts</button></li>
-                    <li><button className={myFriendsPosts ? "tabActive" : "tab"} onClick={()=>toggleTabs('myFriendsThoughts')}>My Followers thoughts</button></li>
-                </ul>
-                <div className="thoughtCntr">
-                    {
-                        myThoughtPosts ?
-                        <div className="posts">
-                            { usersPost.length>0 ?
-                            usersPost.map(post=>
-                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'}  />
-                            )
-                            : 
-                            <div className="card">
-                            <p>Share your first post</p>
-                                <div className="likeStuf">
-                                    <button><i className="far fa-heart"></i></button>
-                                </div>
-                            </div>
-                            }
-                        </div> : ''
-                    }
-                    {
-                        myFriendsPosts ?
-                        <div className="posts">
-                            {
-                            friendsPost.length>0 ?
-                            friendsPost.map(post=>
-                                <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'user'} />
-                            )
-                            : 
-                            <div className="card">
-                            <p>No Posts yet</p>
-                                <div className="likeStuf">
-                                    <button><i className="far fa-heart"></i></button>
-                                </div>
-                            </div>
-                            }
-                        </div> : ''
-                    }
-                </div>
-            </article>
-
-        </section>
+                </article>
+            </section>
         </>
 
     )

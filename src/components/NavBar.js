@@ -1,47 +1,75 @@
 import {useEffect, useState} from 'react'
 import { useNavigate, Link } from "react-router-dom";
-// import firebase from '../firebase';
+import firebase from '../firebase';
 
 import SearchBar from './SearchBar'
 import './styles/NavStyle.css'
-// const loggedInd = localStorage.loggedInd
 
-function NavBar(props) {
-
+function NavBar() {
+    const loggedInd = localStorage.loggedInd
     const userId = localStorage.loggedUserId;
     let navigate = useNavigate();
     const [menuBtn, setMenuBtn]=useState(false)
-    // const [notifications, setNotifications]=useState([])
+    const [notifications, setNotifications]=useState([])
+    
     const logOut = ()=>{
         localStorage.clear();
-        navigate(`/`);
+        navigate(`/`); 
     }
     const redirectTo=()=>{
         navigate(`/Homepage`);
         setMenuBtn(!menuBtn)
-
     }
     const showMenu = ()=>{
         setMenuBtn(!menuBtn)
     }
+    useEffect(() => {
+        // getting the viewers data as well
+        setTimeout(() => {
+            firebase.database().ref().orderByChild('dataType').equalTo('notification').on('value', (response)=>{
+                const data = response.val();
+                const dataArray = []
+                for (let key in data) {
+                    // making sure to add the id inside the object as well.
+                    const newObject = {...data[key], id: key}
+                        // then pushing the users in the users array. 
+                    dataArray.push(newObject)
+                }
+
+                const usersNotificationArr = []
+                dataArray.forEach(notifi=>{
+                    if(notifi.userId === userId && notifi.read === false){
+                        usersNotificationArr.push(notifi)
+                    }
+                })
+                // console.log('usersNotificationArr', usersNotificationArr)
+                setNotifications(usersNotificationArr)
+                // console.log('usersNotification : ', usersNotification)
+            })
+            
+        }, 500);
+    }, [userId]) 
+    
     return (
         <nav className="wrapper">
             {
                 // only users who are logged in will be able to see the nav menu
-                props.loggedInd ?
+                loggedInd == true || loggedInd == "true"  ?
                 <div className="navContainer">
                     {/* search bar to find other users */}
                     <SearchBar/>
                     {/* option to show menu for the users */}
                     <button onClick={showMenu} className="profileMenuBtn"> 
+                    {
+                            notifications.length > 0 ?
                         <div className="notificationNum" >
-                            
-                            {props.notifications.length>0?
                             <p>
-                                {props.notifications.length}
+                                {notifications.length}
                             </p>
-                            :null}
-                            </div>
+                        </div>
+                        : null
+                    }
+
                         <i className="profileIcon fas fa-2x fa-user-circle"></i>
                     </button>
                     {
@@ -50,8 +78,8 @@ function NavBar(props) {
                             <li><button onClick={()=>redirectTo('myProfile')}>My Profile</button></li>
                             <li>
                                 <Link to="/Notification">
-                                    <button>
-                                        Notification {props.notifications.length>0?<span className="notNum">{props.notifications.length}</span>:null}  
+                                    <button className='notifCntr'>
+                                        Notification { notifications ? <span className="notNum">{notifications.length}</span>:null}  
                                     </button>
                                 </Link>
                             </li>

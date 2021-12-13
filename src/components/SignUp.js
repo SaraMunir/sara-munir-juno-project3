@@ -21,7 +21,6 @@ function SignUp() {
     const inputPassword = useRef();
 
 
-    const salt = bcrypt.genSaltSync(10)
 
 
     const handleInput = (e)=>{
@@ -52,6 +51,11 @@ function SignUp() {
             setAlert( { show: true, alertText: 'Please provide your Email Address!' } );
             return;
         }
+        if( !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(user.emailAddress)) ) {
+            inputEmail.current.focus();
+            setAlert( { show: true, alertText: 'Please provide a valid Email!' } );
+            return;
+        }
         // check user passwad is not empty and more than 8 
         if( user.password === "" && user.password.length < 8) {
             inputPassword.current.focus();
@@ -68,20 +72,24 @@ function SignUp() {
             setAlert( { show: false, alertText: '' } );
             const dbRef = firebase.database().ref();
         
-
             console.log('password: ', user.password)
-            const hashedPassword = bcrypt.hashSync(user.password, '$2a$10$CwTycUXWue0Thq9StjUM0u') // hash created previously created upo
-            console.log('hashedPassword: ', hashedPassword)
+            const saltRounds = 10;
+            const hash = bcrypt.hashSync(user.password, saltRounds);
+            // console.log('hash: ', hash)
+            // console.log(bcrypt.compareSync(user.password, hash))
+            // console.log(bcrypt.compareSync('blabla', hash))
+            // console.log(user)
+            let newUser = {...user, password: hash, hashed: true}
+            console.log("newUser: ", newUser)
 
-
-
-            // dbRef.push(user);
+            dbRef.push(newUser);
             // we save the
-            // localStorage.setItem("loggedInd", true);
-            // localStorage.setItem("emailAddress", user.emailAddress);
-            // setUser({...user, fullName: '', emailAddress: '', password: ''})
-            // setIsLoggedIn(true); 
-            // navigate(`/Homepage`);
+            localStorage.setItem("loggedInd", true);
+            const hashedEmail =  bcrypt.hashSync(user.emailAddress, saltRounds)
+            localStorage.setItem("smile", hashedEmail);
+            setUser({...user, fullName: '', emailAddress: '', password: ''})
+            setIsLoggedIn(true); 
+            navigate(`/Homepage`);
         }
     }
     useEffect(() => {
