@@ -38,7 +38,7 @@ function SearchBar() {
         setFilteredUsers([]);
         setSearchInput('')
         navigate(`/userProfile/${userName}/${userId}`);
-        document.location.reload(true);
+        // document.location.reload(true);
     }
 
     useEffect(() => {

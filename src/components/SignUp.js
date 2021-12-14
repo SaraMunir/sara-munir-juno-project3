@@ -3,6 +3,7 @@ import loadingIcon from './assets/Bars-1s-200px.gif'
 import { useNavigate } from "react-router-dom";
 import bcrypt from 'bcryptjs'
 import firebase from '../firebase';
+import { v4 as uuidv4 } from 'uuid';
 
 function SignUp() {
     // to redirect user once they log in to their profile/homepage
@@ -28,6 +29,8 @@ function SignUp() {
         setUser({...user, [id]: value})
     }
     const handleSubmit = (event) => {
+        const sessionId = uuidv4();
+
         event.preventDefault();
         // check if users email already exists in data base. 
         let doesEmailExist = false;
@@ -75,18 +78,19 @@ function SignUp() {
             console.log('password: ', user.password)
             const saltRounds = 10;
             const hash = bcrypt.hashSync(user.password, saltRounds);
-            // console.log('hash: ', hash)
-            // console.log(bcrypt.compareSync(user.password, hash))
-            // console.log(bcrypt.compareSync('blabla', hash))
-            // console.log(user)
             let newUser = {...user, password: hash, hashed: true}
             console.log("newUser: ", newUser)
-
             dbRef.push(newUser);
+            const dbRef2 = firebase.database().ref(`sessions/${sessionId}`);
+            let sessionObject = {
+                sessionId: sessionId, 
+                emailAddress: user.emailAddress, 
+            }
+            dbRef2.push(sessionObject);
             // we save the
             localStorage.setItem("loggedInd", true);
-            const hashedEmail =  bcrypt.hashSync(user.emailAddress, saltRounds)
-            localStorage.setItem("smile", hashedEmail);
+            localStorage.setItem("sessionId", sessionId);
+
             setUser({...user, fullName: '', emailAddress: '', password: ''})
             setIsLoggedIn(true); 
             navigate(`/Homepage`);

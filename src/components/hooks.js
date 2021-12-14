@@ -57,3 +57,24 @@ export function useNotifications(userId){
     }, [])
     return [notifications]
 }
+export function useUserIdFromSessionId(sessionId){
+    const [mainUserId, setMainUserId] = useState();
+    useEffect(()=>{
+         // getting the viewers data as well
+        let ownersId
+        firebase.database().ref(`/sessions/${sessionId}`).on('value', (response)=>{
+            const data = response.val();
+            let sessionData 
+            for (let key in data) {
+                // making sure to add the id inside the object as well.
+                const newObject = {...data[key]}
+                    // then pushing the users in the users array. 
+                    sessionData= newObject
+            }
+            setMainUserId(sessionData.userId)
+            ownersId=sessionData.userId
+            console.log('sessionData', sessionData)
+        })
+    }, [])
+    return [mainUserId]
+}

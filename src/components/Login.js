@@ -3,6 +3,7 @@ import firebase from '../firebase';
 import loadingIcon from './assets/Bars-1s-200px.gif'
 import { useNavigate } from "react-router-dom";
 import bcrypt from 'bcryptjs'
+import { v4 as uuidv4 } from 'uuid';
 
 function Login() {
     // to redirect user once they log in to their profile/homepage
@@ -39,6 +40,7 @@ function Login() {
             return;
         }
         let userFound = false
+        const sessionId = uuidv4();
         // find user from the users object by email and then check if password match. 
         if (users.length>0){
             users.forEach(eachUser=>{
@@ -52,10 +54,19 @@ function Login() {
                             setAlert( { show: true, alertText: 'Success loggin In' } );
                             // const saltRounds = 10;
                             // const hashedEmail = bcrypt.hashSync(user.emailAddress, saltRounds);
+                            // trying session :
+                            const dbRef = firebase.database().ref(`sessions/${sessionId}`);
+                            // const dbRef = firebase.database().ref();
 
+                            let sessionObject = {
+                                sessionId: sessionId, 
+                                emailAddress: user.emailAddress, 
+                                userId: eachUser.id, 
+                            }
+                            dbRef.push(sessionObject);
                             // log in user state and redirect to homepage
+                            localStorage.setItem("sessionId", sessionId);
                             localStorage.setItem("loggedInd", true);
-                            localStorage.setItem("emailAddress", user.emailAddress)
                             // localStorage.setItem("smile", hashedEmail)
                             setUser({ emailAddress: '', password: ''})
                             setIsLoggedIn(true); 
@@ -70,15 +81,27 @@ function Login() {
                         }
                     }else {
                         // if user email matches check if password matches
-
                         if (eachUser.password === user.password){
                             // const saltRounds = 10;
                             // const hashedEmail = bcrypt.hashSync(user.emailAddress, saltRounds);
                             // if password matches print out alert
                             setAlert( { show: true, alertText: 'Success loggin In' } );
                             // log in user state and redirect to homepage
+                            const dbRef = firebase.database().ref(`sessions/${sessionId}`);
+
+                            // const dbRef = firebase.database().ref();
+                            let sessionObject = {
+                                sessionId: sessionId, 
+                                emailAddress: user.emailAddress, 
+                                userId: eachUser.id, 
+                            }
+                            console.log(sessionObject)
+
+                            dbRef.push(sessionObject);
+                            // log in user state and redirect to homepage
+                            localStorage.setItem("sessionId", sessionId);
                             localStorage.setItem("loggedInd", true);
-                            localStorage.setItem("emailAddress", user.emailAddress)
+                            // localStorage.setItem("emailAddress", user.emailAddress)
                             // localStorage.setItem("smile", hashedEmail)
 
                             setUser({ emailAddress: '', password: ''})

@@ -3,7 +3,6 @@ import firebase from '../firebase.js'
 import LikeUnlike from './LikeUnlike'
 function PostCards(props) {
     const [postLiked, setPostLiked] = useState(false)
-    const visitorId = localStorage.loggedUserId;
     const [postTime, setPostTime] = useState({})
     const month= ["January","February","March","April","May","June","July",
         "August","September","October","November","December"];
@@ -16,7 +15,7 @@ function PostCards(props) {
         // checking if the post is like by the user or not
         if(post.likes){
             post.likes.map(like=>{
-                if(like === visitorId){
+                if(like === props.visitorId){
                     setPostLiked(true)
                 }else {
                     setPostLiked(false)
@@ -66,7 +65,7 @@ function PostCards(props) {
             {/* unLikePost */}
             <div className="row">
                 <div className="likeSection" >
-                    <LikeUnlike post={props.post} viewersId={visitorId}/>
+                    <LikeUnlike post={props.post} viewersId={props.visitorId}/>
                     <div className="row">
                         <button className="comment" onClick={()=>props.modalWindow('readMore', props.post.id, props.post)}>
                             <i className="far fa-comment"></i> 

@@ -10,6 +10,7 @@ import Homepage from './components/Homepage.js';
 import UserProfile from './components/UserProfile';
 import Notification from './components/Notification';
 import Calendar from './components/CalendarTest'
+import Settings from './components/Settings';
 
 function App() {
   // const [notifications, setNotifications]=useState([])
@@ -30,6 +31,7 @@ function App() {
 
           {/* users homepage once they are logged in*/}
           <Route path='/Notification' element={<Notification/>}/>
+          <Route path='/Settings' element={<Settings/>}/>
           <Route path='/Homepage' element={<Homepage/>}/>
 
           {/* other users profile page */}

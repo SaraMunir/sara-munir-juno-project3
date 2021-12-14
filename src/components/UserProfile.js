@@ -5,15 +5,17 @@ import Profile from './Profile';
 import PostCards from './PostCards';
 import ReadPost from './ReadPost';
 import NavBar from './NavBar';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 let selectedPostId;
 
 function UserProfile(props) {
+    let navigate = useNavigate();
+
     const loggedInd = localStorage.loggedInd;
-    const visitorId = localStorage.loggedUserId;
-    const email = localStorage.emailAddress;
+    const sessionId = localStorage.sessionId;
+    const [visitorId, setVisitorId] = useState('')
     const { userId } = useParams();
     const [user, setUser]= useState({});
     const [visitor, setVisitor]= useState({});
@@ -32,8 +34,6 @@ function UserProfile(props) {
     const [postObject, setPostObject] = useState({})
 
     const id = uuidv4();
-
-
     const [post, setPost] = useState({
         postText: ''
     });
@@ -168,117 +168,140 @@ function UserProfile(props) {
 
     // getting data for both users and the visitors
     useEffect(() => {
-        // getting the users data who's profile viewer is viewing. 
-        let userData
-        firebase.database().ref(`/${userId}`).on('value', (response)=>{
-            const data = response.val();
-            userData = {...data, id: userId}
-            setUser({...data, id: userId})
-            if(data.Followers){
-                //'checking users followers list: 
-                data.Followers.map(follower=>{
-                    if (follower === visitorId){
-                        setIsPersonFollowingUser(true)
-                    }
-                })
-            }
-        })
-        // getting the viewers data as well
-        firebase.database().ref().orderByChild('emailAddress').equalTo(email).on('value', (response)=>{
-            const data = response.val();
-            const dataArray = []
-            for (let key in data) {
-                // making sure to add the id inside the object as well.
-                const newObject = {...data[key], id: key}
-                    // then pushing the users in the users array. 
-                dataArray.push(newObject)
-            }
-            setVisitor(dataArray[0])
-        })
-        
-        // getting other users data to get the followers & followings objects.
-        firebase.database().ref().on('value', (response)=>{
-            const data = response.val()
-            const dataArray = []
-            for (let key in data) {
-                // making sure to add the id inside the object as well.
-                const newObje = {...data[key], id: key}
-                    // then pushing the users in the users array. 
-                dataArray.push(newObje)
-            }
-
-            // getting the posts data from the users followers
-            const usersFriendsPostsArray = []
-
-            dataArray.forEach(obj=>{
-                //  first get data that has the type of followersPost
-                if(obj.dataType ==='followersPost'){
-                    // if the posts userid is equal to user's userid then push the object to the posts array
-                    if(userId === obj.userId){
-                        usersFriendsPostsArray.push(obj)
-                    }
+        if(sessionId){
+            let personVisitingId
+            let personVisitingsEmail
+            firebase.database().ref(`/sessions/${sessionId}`).on('value', (response)=>{
+                const data = response.val();
+                let sessionData 
+                for (let key in data) {
+                    // making sure to add the id inside the object as well.
+                    const newObject = {...data[key]}
+                        // then pushing the users in the users array. 
+                        sessionData= newObject
+                }
+                setVisitorId(sessionData.userId)
+                personVisitingId=sessionData.userId
+                personVisitingsEmail=sessionData.emailAddress
+            })
+            // getting the users data who's profile viewer is viewing. 
+            let userData
+            firebase.database().ref(`/${userId}`).on('value', (response)=>{
+                const data = response.val();
+                userData = {...data, id: userId}
+                setUser({...data, id: userId})
+                if(data.Followers){
+                    //'checking users followers list: 
+                    data.Followers.map(follower=>{
+                        console.log()
+                        if (follower === personVisitingId){
+                            setIsPersonFollowingUser(true)
+                        }
+                    })
                 }
             })
-            // addign the posters object to the array:
-            const editedUsersFriendsPostsArray =[]
-            usersFriendsPostsArray.forEach(friendsPost=>{
-                // console.log('posts: ', friendsPost)
-                dataArray.forEach(other=>{
-                    if(other.id === friendsPost.postersId){
-                        const posterObjt = {...friendsPost, 
-                            poster: {
-                            fullName : other.fullName,
-                            profileImg: other.profileImg,
-                            id: other.id
-                        } }
-                        editedUsersFriendsPostsArray.push(posterObjt)
+            // getting the viewers data as well
+            firebase.database().ref().orderByChild('emailAddress').equalTo(personVisitingsEmail).on('value', (response)=>{
+                const data = response.val();
+                const dataArray = []
+                for (let key in data) {
+                    // making sure to add the id inside the object as well.
+                    const newObject = {...data[key], id: key}
+                        // then pushing the users in the users array. 
+                    dataArray.push(newObject)
+                }
+                setVisitor(dataArray[0])
+            })
+            // getting other users data to get the followers & followings objects.
+            firebase.database().ref().on('value', (response)=>{
+                const data = response.val()
+                const dataArray = []
+                for (let key in data) {
+                    // making sure to add the id inside the object as well.
+                    const newObje = {...data[key], id: key}
+                        // then pushing the users in the users array. 
+                    dataArray.push(newObje)
+                }
+    
+                // getting the posts data from the users followers
+                const usersFriendsPostsArray = []
+    
+                dataArray.forEach(obj=>{
+                    //  first get data that has the type of followersPost
+                    if(obj.dataType ==='followersPost'){
+                        // if the posts userid is equal to user's userid then push the object to the posts array
+                        if(userId === obj.userId){
+                            usersFriendsPostsArray.push(obj)
+                        }
                     }
                 })
-            })
-
-
-            // filtering the users object to get only the followers list 
-            const userFollowersArr = [];
-            if(userData.Followers){
-                userData.Followers.forEach(person=>{
+                // addign the posters object to the array:
+                const editedUsersFriendsPostsArray =[]
+                usersFriendsPostsArray.forEach(friendsPost=>{
+                    // console.log('posts: ', friendsPost)
                     dataArray.forEach(other=>{
-                        if(other.id === person){
-                            userFollowersArr.push(other)
+                        if(other.id === friendsPost.postersId){
+                            const posterObjt = {...friendsPost, 
+                                poster: {
+                                fullName : other.fullName,
+                                profileImg: other.profileImg,
+                                id: other.id
+                            } }
+                            editedUsersFriendsPostsArray.push(posterObjt)
                         }
                     })
                 })
-            }
-            // sorting the array by posting order 
-            const sortingFriendsPosts = editedUsersFriendsPostsArray.sort((a,b)=>{
-                let A = a.timeStamp
-                let B = b.timeStamp
-                if(A.year > B.year) return -1
-                if(A.year < B.year) return 1
-                if(A.month > B.month) return -1
-                if(A.month < B.month) return 1
-                if(A.date > B.date) return -1
-                if(A.date < B.date) return 1
-                if(A.hours > B.hours) return -1
-                if(A.hours < B.hours) return 1
-                if(A.minutes > B.minutes) return -1
-                if(A.minutes < B.minutes) return 1
-            })
-            setUsersFriendsPost(sortingFriendsPosts)
-            
-            // filtering the users object to get only the followings list 
-            const userFollowingArr = [];
-            if(userData.Following){
-                userData.Following.forEach(person=>{
-                    dataArray.forEach(other=>{
-                        if(other.id === person){
-                            userFollowingArr.push(other)
-                        }
+    
+    
+                // filtering the users object to get only the followers list 
+                const userFollowersArr = [];
+                if(userData.Followers){
+                    userData.Followers.forEach(person=>{
+                        dataArray.forEach(other=>{
+                            if(other.id === person){
+                                userFollowersArr.push(other)
+                            }
+                        })
                     })
+                }
+                // sorting the array by posting order 
+                const sortingFriendsPosts = editedUsersFriendsPostsArray.sort((a,b)=>{
+                    let A = a.timeStamp
+                    let B = b.timeStamp
+                    if(A.year > B.year) return -1
+                    if(A.year < B.year) return 1
+                    if(A.month > B.month) return -1
+                    if(A.month < B.month) return 1
+                    if(A.date > B.date) return -1
+                    if(A.date < B.date) return 1
+                    if(A.hours > B.hours) return -1
+                    if(A.hours < B.hours) return 1
+                    if(A.minutes > B.minutes) return -1
+                    if(A.minutes < B.minutes) return 1
                 })
-            }
-            setUsersFollowers(userFollowersArr)
-            setUsersFollowings(userFollowingArr)
-        })
+                setUsersFriendsPost(sortingFriendsPosts)
+                
+                // filtering the users object to get only the followings list 
+                const userFollowingArr = [];
+                if(userData.Following){
+                    userData.Following.forEach(person=>{
+                        dataArray.forEach(other=>{
+                            if(other.id === person){
+                                userFollowingArr.push(other)
+                            }
+                        })
+                    })
+                }
+                setUsersFollowers(userFollowersArr)
+                setUsersFollowings(userFollowingArr)
+            })
+        }else {
+            console.log('no session id, so logging out')
+            localStorage.clear();
+            window.location.reload(false);
+            navigate(`/`); 
+
+        }
     }, [userId])
 
     // getting the users posts data's 
@@ -297,19 +320,33 @@ function UserProfile(props) {
             const usersPost = postsArray.filter(post=>{
                 return post.userId === userId
             })
-            setUserPost(usersPost)
+                // sorting the array by posting order 
+            const sortingUserssPosts = usersPost.sort((a,b)=>{
+                let A = a.timeStamp
+                let B = b.timeStamp
+                if(A.year > B.year) return -1
+                if(A.year < B.year) return 1
+                if(A.month > B.month) return -1
+                if(A.month < B.month) return 1
+                if(A.date > B.date) return -1
+                if(A.date < B.date) return 1
+                if(A.hours > B.hours) return -1
+                if(A.hours < B.hours) return 1
+                if(A.minutes > B.minutes) return -1
+                if(A.minutes < B.minutes) return 1
+            })
+            setUserPost(sortingUserssPosts)
         })
     }, [userId])
 
     return (
-            <>
-                    <NavBar/>
+        <>
+        <NavBar userId={visitorId}/>
 
+        {visitorId === userId ? <Navigate to='/Homepage' /> : null }
+        { loggedInd === "false" ||  !loggedInd?  <Navigate to='/' /> : null }
 
-            {visitorId === userId ? <Navigate to='/Homepage' /> : null }
-            { loggedInd === "false" ||  !loggedInd?  <Navigate to='/' /> : null }
-
-            {/* <NavBar loggedInd={loggedInd} /> */}
+        {/* <NavBar loggedInd={loggedInd} /> */}
         <section className="wrapper mainProfile">
             {
                 homeModal?
@@ -364,7 +401,7 @@ function UserProfile(props) {
                 <div className="posts">
                     { usersPost.length>0 ?
                     usersPost.map(post=>
-                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}/>
+                        <PostCards key={post.id} visitorId={visitorId} post={post} modalWindow={modalWindow} userType={'visitor'}/>
                     )
                     : 
                     <div className="card">
@@ -379,7 +416,7 @@ function UserProfile(props) {
                     {
                     usersFriendsPost.length>0 ?
                     usersFriendsPost.map(post=>
-                        <PostCards key={post.id} post={post} modalWindow={modalWindow} userType={'visitor'}/>
+                        <PostCards key={post.id} visitorId={visitorId} post={post} modalWindow={modalWindow} userType={'visitor'}/>
                     )
                     : 
                     <div className="card">

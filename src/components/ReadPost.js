@@ -2,11 +2,16 @@ import {useEffect, useState} from 'react'
 import LikeUnlike from './LikeUnlike';
 import firebase from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
+import {useUserIdFromSessionId} from './hooks'
 
 
 function ReadPost(props) {
     const [postTime, setPostTime] = useState({})
-    const viewersId = localStorage.loggedUserId;
+    const sessionId = localStorage.sessionId;
+
+    const [viewersId] = useUserIdFromSessionId(sessionId)
+
+    // const viewersId = localStorage.loggedUserId;
     const [comment, setComment] = useState('')
     const [allComment, setAllComment] = useState([])
     const [postDetail, setPostDetail] = useState({})

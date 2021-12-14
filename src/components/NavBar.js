@@ -5,16 +5,21 @@ import firebase from '../firebase';
 import SearchBar from './SearchBar'
 import './styles/NavStyle.css'
 
-function NavBar() {
+function NavBar(props) {
     const loggedInd = localStorage.loggedInd
-    const userId = localStorage.loggedUserId;
+    const sessionId = localStorage.sessionId;
+
+    // const userId = localStorage.loggedUserId;
     let navigate = useNavigate();
     const [menuBtn, setMenuBtn]=useState(false)
     const [notifications, setNotifications]=useState([])
     
     const logOut = ()=>{
-        localStorage.clear();
-        navigate(`/`); 
+        // dbRef.child(id).remove();
+        firebase.database().ref(`/sessions/${sessionId}`).remove()
+            navigate(`/`); 
+            localStorage.clear();
+            window.location.reload(false);
     }
     const redirectTo=()=>{
         navigate(`/Homepage`);
@@ -25,6 +30,7 @@ function NavBar() {
     }
     useEffect(() => {
         // getting the viewers data as well
+        
         setTimeout(() => {
             firebase.database().ref().orderByChild('dataType').equalTo('notification').on('value', (response)=>{
                 const data = response.val();
@@ -38,7 +44,7 @@ function NavBar() {
 
                 const usersNotificationArr = []
                 dataArray.forEach(notifi=>{
-                    if(notifi.userId === userId && notifi.read === false){
+                    if(notifi.userId === props.userId && notifi.read === false){
                         usersNotificationArr.push(notifi)
                     }
                 })
@@ -48,8 +54,7 @@ function NavBar() {
             })
             
         }, 500);
-    }, [userId]) 
-    
+    }, [props.userId]) 
     return (
         <nav className="wrapper">
             {
@@ -83,7 +88,13 @@ function NavBar() {
                                     </button>
                                 </Link>
                             </li>
-                            <li><button>Settings</button></li>
+                            <li>
+                                <Link to="/Settings">
+                                    <button className='notifCntr'>
+                                        Settings
+                                    </button>
+                                </Link>
+                            </li>
                             <li><button onClick={logOut}>Log Out <i className="fas fa-sign-out-alt"></i></button></li>
                         </ul> 
                         : null

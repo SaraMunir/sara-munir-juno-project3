@@ -157,8 +157,6 @@ aside {
   margin: 0 auto;
 }
 
-
-
 .followBtn{
   padding: 10px 20px;
   position: absolute;
@@ -182,4 +180,40 @@ aside {
 .calendarCntr{
   width: 70%;
   margin: 0 auto;
+}
+
+.settings{
+  width: 70%;
+  margin: 0 auto;
+  padding: 40px;
+  background: #f3f3fa;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  position: relative;
+}
+.settingsItem{
+  border: 1px solid rgb(47, 154, 255);
+}
+.testBorder {
+  border: 1px solid rgb(120, 47, 255);
+}
+.settingsBox{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+}
+.settingsItem h3 {
+  width: 20%;
+}
+.settingsItem .value {
+  width: 70%;
+  /* margin: 10px auto; */
+}
+.value h2 {
+  margin: 0;
+}
+.settingsItem .editSettingsBtn {
+  width: 10%;
+  background: greenyellow;
 }
