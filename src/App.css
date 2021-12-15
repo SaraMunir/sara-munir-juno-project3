@@ -190,12 +190,17 @@ aside {
   border-radius: 10px;
   margin-bottom: 15px;
   position: relative;
+  min-height: 70vh;
+}
+.lineBreakSettings{
+  border-bottom: 2px solid #59408577;
 }
 .settingsItem{
-  border: 1px solid rgb(47, 154, 255);
+  border-bottom: 1px solid #59408577;
+  padding: 20px;
 }
 .testBorder {
-  border: 1px solid rgb(120, 47, 255);
+  /* border: 1px solid rgb(120, 47, 255); */
 }
 .settingsBox{
   display: flex;
@@ -215,5 +220,29 @@ aside {
 }
 .settingsItem .editSettingsBtn {
   width: 10%;
-  background: greenyellow;
+  color: #ff9f00;
+  font-size: 1.8rem;
+  transition: .5s;
+  cursor: pointer;
+}
+.settingsItem .editSettingsBtn:hover, .settingsItem .editSettingsBtn:focus{
+  color: #5b2dff;
+
+}
+.simpleBtn {
+  background: #5b2dff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+.settingInpLbl{
+  font-size: 1.2rem;
+}
+.settingInput{
+  padding: 10px;
+}
+.diabled{
+  background: #555064;
+
 }

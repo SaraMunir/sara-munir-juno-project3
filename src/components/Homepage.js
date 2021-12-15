@@ -36,8 +36,6 @@ function Homepage() {
     const [usersFollowers,setUsersFollowers] = useState([])
     const [usersFollowings,setUsersFollowings] = useState([])
     const [postObject, setPostObject] = useState({})
-    // 
-    // const [testLike, setTestLikes] = useState(false)
     const handleInputPost = (e)=>{
         const {id, value}= e.target
         setPost({...post, [id]: value})
