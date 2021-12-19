@@ -246,3 +246,97 @@ aside {
   background: #555064;
 
 }
+
+.notifDetail{
+  display: flex;
+  align-items: center;
+  width: 90%;
+  /* justify-content: flex-start; */
+}
+.imageCntr {
+  /* width: 10%; */
+}
+.commentItem{
+  width: 90%;
+  /* border: 1px solid #5b2dff; */
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.801);
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+.commentItem h4, .commentItem p {
+  margin: 5px 0;
+}
+.commentItem h4 {
+  text-transform: capitalize;
+}
+.bigCard{
+  width: 60%;
+  margin: 0 auto;
+  background: #eeeefa;
+  padding: 20px;
+  border-radius: 20px;
+}
+.postersCntr{
+  display: flex;
+}
+.postersCntr div h3 {
+  font-size: 1.2rem;
+  margin: 5px;
+}
+.postersCntr div p{
+  margin: 5px;
+}
+.commentBtns{
+  padding: 2px;
+  border: 1px solid #5b2dff;
+  min-width: 59px;
+  border-radius: 5px;
+  margin: 2px;
+  cursor: pointer;
+}
+.commentBtns:hover, .commentBtns:focus {
+  background: #5b2dff;
+  color: white;
+}
+.commentsLikeCntr{
+  border: 1px solid #5b2dff;
+  width: 50px;
+  height: 30px;
+  position: absolute;
+  top: -10px;
+  right: 10px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+.replies{
+  margin-left: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.replyShowBtna{
+  cursor: pointer;
+  color: #5b2dff;
+}
+.replyShowBtna:hover, .replyShowBtna:focus {
+  color: #ff9f00;
+}
+.plusSign{
+  display: inline-block;
+  justify-content: start;
+  align-items: flex-start;
+  position: relative;
+}
+.plusSign i {
+  position: absolute;
+  top: 40%;
+  
+}

@@ -98,12 +98,8 @@ function Login() {
                             console.log(sessionObject)
 
                             dbRef.push(sessionObject);
-                            // log in user state and redirect to homepage
                             localStorage.setItem("sessionId", sessionId);
                             localStorage.setItem("loggedInd", true);
-                            // localStorage.setItem("emailAddress", user.emailAddress)
-                            // localStorage.setItem("smile", hashedEmail)
-
                             setUser({ emailAddress: '', password: ''})
                             setIsLoggedIn(true); 
                             setTimeout( function(){ 
@@ -179,9 +175,6 @@ function Login() {
                             <button className="initialBtnSettng submitBtn">Log In</button>
                         </div>
                     </form>
-                    <div className="row jstfyCntCenter">
-                        <button className="initialBtnSettng submitBtn">Forgot Password?</button>
-                    </div>
                 </>
                 }
         </div>

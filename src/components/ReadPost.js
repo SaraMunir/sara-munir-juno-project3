@@ -3,7 +3,8 @@ import LikeUnlike from './LikeUnlike';
 import firebase from '../firebase';
 import { v4 as uuidv4 } from 'uuid';
 import {useUserIdFromSessionId} from './hooks'
-
+import {useFetchAllUser} from './hooks';
+import CommentCard from './CommentCard';
 
 function ReadPost(props) {
     const [postTime, setPostTime] = useState({})
@@ -11,10 +12,11 @@ function ReadPost(props) {
 
     const [viewersId] = useUserIdFromSessionId(sessionId)
 
-    // const viewersId = localStorage.loggedUserId;
-    const [comment, setComment] = useState('')
-    const [allComment, setAllComment] = useState([])
-    const [postDetail, setPostDetail] = useState({})
+    const [comment, setComment] = useState('');
+    const [allComment, setAllComment] = useState([]);
+    const [postDetail, setPostDetail] = useState({});
+    const [allUsers] = useFetchAllUser();
+
 
     const month= ["January","February","March","April","May","June","July", "August","September","October","November","December"];
     
@@ -23,7 +25,8 @@ function ReadPost(props) {
     }
     const postAComment=(e)=>{
         e.preventDefault()
-        console.log(props.post);
+        const dbRef = firebase.database().ref();
+
         if (comment){
             // check if the post had been liked before or not
             if(postDetail.comments){
@@ -48,6 +51,93 @@ function ReadPost(props) {
                     timeStamp: dateTime,
                     postId: props.post.id
                 } 
+                if(viewersId === props.post.userId){
+                    console.log('no need to notify yourself')
+                    if(props.post.dataType ==='followersPost'){
+                        const commentNotification = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.userId,
+                            who: 'owner'
+
+                        }
+                        const commentNotificationForFollowers = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.postersId,
+                            who: 'follower', 
+                            wallOwner: props.post.userId,
+
+                        }
+                        dbRef.push(commentNotification);
+                        dbRef.push(commentNotificationForFollowers);
+                    }
+                }else{
+                    // if person commenting on the users post then only send notification to user
+                    if(props.post.dataType ==='userPost'){
+                        const commentNotification = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.userId
+                        }
+                        dbRef.push(commentNotification);
+                    }
+                    // if person commenting on the users followers post then send notification to bot the user and the follower
+                    if(props.post.dataType ==='followersPost'){
+                        const commentNotification = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.userId,
+                            who: 'owner'
+
+                        }
+                        const commentNotificationForFollowers = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.postersId,
+                            who: 'follower', 
+                            wallOwner: props.post.userId,
+
+                        }
+                        dbRef.push(commentNotification);
+                        dbRef.push(commentNotificationForFollowers);
+                    }
+                }
                 const commentObj ={
                     comments:newList
                 }
@@ -77,6 +167,60 @@ function ReadPost(props) {
                     timeStamp: dateTime,
                     postId: props.post.id
                 } 
+                if(viewersId === props.post.userId){
+                    console.log('no need to notify yourself')
+                }else {
+                    // if person commenting on the users post then only send notification to user
+                    if(props.post.dataType ==='userPost'){
+                        const commentNotification = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.userId
+                        }
+                        dbRef.push(commentNotification);
+                    }
+                    // if person commenting on the users followers post then send notification to both the user and the follower
+                    if(props.post.dataType ==='followersPost'){
+                        // users notication
+                        const commentNotification = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.userId, 
+                            who: 'owner'
+                        }
+                        // users followers notication
+                        const commentNotificationForFollowers = {
+                            dataType: 'notification',
+                            type: 'commentOnPost',
+                            commentId: id,
+                            commenterId: viewersId,
+                            comment: comment, 
+                            timeStamp: dateTime,
+                            postId: props.post.id,
+                            read: false, 
+                            postType: props.post.dataType,
+                            userId: props.post.postersId,
+                            who: 'follower', 
+                            wallOwner: props.post.userId,
+                        }
+                        dbRef.push(commentNotification);
+                        dbRef.push(commentNotificationForFollowers);
+                    }
+                }
                 const commentObj ={
                     comments:[
                         commentObject
@@ -160,8 +304,9 @@ function ReadPost(props) {
             }
             // allUsers= dataArray
         })
-        console.log('dataarray: ', usersArray)
+        // console.log('dataarray: ', usersArray)
         firebase.database().ref(`/${props.post.id}`).on('value', (response)=>{
+            // 'followersPost'
             const data = response.val();
             let postData = {...data, id: props.post.id}
             setPostDetail(postData)
@@ -203,7 +348,7 @@ function ReadPost(props) {
                 {
                     props.post.dataType === "followersPost" ? 
                     <div className="postersCntr">
-                        <img className="smallThmbNail" src={props.post.poster.profileImg.imageUrl } alt={`image of ${props.post.poster.fullName}`} />
+                        <img className="smallThmbNail" src={props.post.poster.profileImg?props.post.poster.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' } alt={`image of ${props.post.poster.fullName}`} />
                         <p>{props.post.poster.fullName }</p>
                     </div>
                     : null
@@ -241,15 +386,7 @@ function ReadPost(props) {
                 <div className="allComments">
                     {allComment.length>0?
                     allComment.map(comment=>
-                        <div key={comment.id} className="row">
-                            <img className="smallThmbNail" src={comment.commentorObj.profileImg ? comment.commentorObj.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' } alt="" />
-                            <div key={comment.id} className="commentCard">
-                                <h4>{comment.commentorObj.fullName}</h4>
-                                <p>
-                                {comment.comment}
-                                </p>
-                            </div>
-                        </div>
+                        <CommentCard key={comment.id} comment={comment} allUsers={allUsers} postDetail={postDetail} viewersId={viewersId}/>
                         )
                     : null    
                     }

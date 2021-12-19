@@ -99,7 +99,6 @@ function Homepage() {
     }
     useEffect(() => {
         if(sessionId){
-            console.log('sessionId', sessionId)
             let ownersId
             let ownersEmail
             let emailObj
@@ -133,19 +132,11 @@ function Homepage() {
                 dataArray.forEach(user=>{
                     if (user.dataType === "userAccounts"){
                         if(user.emailAddress === ownersEmail){
-                            console.log(user)
-                            console.log(user.emailAddress)
-                            console.log(ownersEmail)
-                            console.log(sessionData)
-                            // localStorage.setItem("loggedUserId",  user.id);
-                            // localStorage.setItem("hashedUserId",  hashedUserId);
-                            
                             userData=user
                             setUser(user);
                             setMyId(user.id)
                             ownersId = user.id
                             emailObj= {userId: user.id}
-                            // firebase.database().ref(`/sessions/${sessionId}`).update(emailObj)
                         }
                     }
                 })
