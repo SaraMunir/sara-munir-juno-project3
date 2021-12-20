@@ -73,7 +73,6 @@ export function useUserIdFromSessionId(sessionId){
             }
             setMainUserId(sessionData.userId)
             ownersId=sessionData.userId
-            console.log('sessionData', sessionData)
         })
     }, [])
     return [mainUserId]

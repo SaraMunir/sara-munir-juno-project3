@@ -86,7 +86,6 @@ function Notification() {
                                         )
                                     }
                                 </div>
-                                <button>delete</button>
                             </li>
                             </Link>
                             ;

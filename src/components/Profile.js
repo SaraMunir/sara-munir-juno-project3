@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
 
 
-
 function Profile(props) {
     const usersFollowers = props.usersFollowers
     const usersFollowings = props.usersFollowings
@@ -54,8 +53,8 @@ function Profile(props) {
                     <p>{user.occupation ? user.occupation : 'no occupation provided yet'}</p>
                 </div>
             </div>
-            <div className="card">
-                <h2>Followers</h2>
+            <div className="card followersCard">
+                <h2>Followers  <span className='countNum'>{usersFollowers.length>0? usersFollowers.length: null}</span> </h2>
                 <hr />
                 <div className='friendsGalleryThumb'>
                     {
@@ -67,7 +66,7 @@ function Profile(props) {
                                 <img title={follwer.fullName} src={follwer.profileImg ? follwer.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt={follwer.fullName} />
                                 </Link>
                                 )}
-                                <Link  to={`/followers`} className='plusSign'>
+                                <Link  to={`/followers/${user.id}`} className='plusSign'>
                                     <img title="show more" src='https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' alt='additional' /><i className="fas fa-plus"></i>
                                 </Link>
                         </div>
@@ -82,24 +81,39 @@ function Profile(props) {
                     }
                 </div>
                 {usersFollowers.length > 6 ? 
-                    <Link to={'/followers'}>Show More Followers</Link>
+                    <Link className='showMoreText' to={`/followers/${user.id}`}>Show More Followers</Link>
                     : null }
             </div>
-            <div className="card">
-                <h2>Following</h2>
+            <div className="card followersCard">
+                <h2>Following <span className='countNum'>{usersFollowings.length>0? usersFollowings.length: null}</span> </h2>
                 <hr />
+                {/* <p className='countNum'>{usersFollowings.length}</p> */}
                 <div className='friendsGalleryThumb'>
-                    {usersFollowings.length >0 ?
-                        usersFollowings.map(follwer=>
+                    {
+                    usersFollowings.length >0 ?
+                        usersFollowings.length >6 ?
+                        <div>
+                        {
+                            usersFollowings.slice(0,6).map(follwer=>
                             <Link key={follwer.id} to={`/userProfile/${follwer.fullName}/${follwer.id}`} >
                             <img title={follwer.fullName} src={follwer.profileImg ? follwer.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt={follwer.fullName} />
                             </Link>
-                            )
+                            )}
+                            <Link to={`/followers/${user.id}`} className='plusSign'>
+                            <img title="show more" src='https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' alt='additional' /><i className="fas fa-plus"></i></Link>
+                        </div>
+                        :
+                        usersFollowings.map(follwer=>
+                            <Link key={follwer.id} to={`/userProfile/${follwer.fullName}/${follwer.id}`} >
+                            <img title={follwer.fullName} src={follwer.profileImg ? follwer.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png'} alt={follwer.fullName} />
+                            </Link>)
                         :
                         <h4>Not following anyone</h4>
                     }
-
                 </div>
+                {usersFollowings.length > 6 ? 
+                    <Link to={`/followers/${user.id}`}>Show More Followers</Link>
+                    : null }
             </div>
         </div>
     )

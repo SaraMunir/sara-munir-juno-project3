@@ -2,6 +2,10 @@ import React, {useState, useEffect} from 'react'
 import firebase from '../firebase';
 
 function LikeUnlike(props) {
+    const sessionId = localStorage.sessionId;    
+    const [ userId, setUserId] = useState('');
+
+
     const [postLiked, setPostLiked] = useState(false)
     const [postDetail, setPostDetail] = useState({})
     const likingPost = ()=>{
@@ -47,15 +51,15 @@ function LikeUnlike(props) {
             setPostLiked(false)
         }
     }
-    const loadPostDetail = ()=>{
+    const loadPostDetail = (viewersId)=>{
         firebase.database().ref(`/${props.post.id}`).on('value', (response)=>{
             const data = response.val();
             let postData = {...data, id: props.post.id}
             setPostDetail(postData)
             if(postData.likes){
                 //'checking users followers list: 
-                postData.likes.forEach(likes=>{
-                    if (likes === props.viewersId){
+                postData.likes.forEach(like=>{
+                    if (like === viewersId){
                         setPostLiked(true)
                     }
                 })
@@ -63,8 +67,24 @@ function LikeUnlike(props) {
         })
     }
     useEffect(() => {
-        loadPostDetail()
-        // checking if the post is like by the user or not
+        let ownersId
+
+        firebase.database().ref(`/sessions/${sessionId}`).on('value', (response)=>{
+            const data = response.val();
+            let sessionData 
+            for (let key in data) {
+                // making sure to add the id inside the object as well.
+                const newObject = {...data[key]}
+                    // then pushing the users in the users array. 
+                    sessionData= newObject
+            }
+            setUserId(sessionData.userId)
+            ownersId=sessionData.userId
+            
+                    loadPostDetail(ownersId)
+                    // checking if the post is like by the user or not
+        })
+
     }, [])
     return (
     <div>

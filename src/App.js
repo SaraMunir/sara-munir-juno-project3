@@ -10,6 +10,7 @@ import UserProfile from './components/UserProfile';
 import Notification from './components/Notification';
 import Settings from './components/Settings';
 import NotificationDetail from './components/NotificationDetail';
+import Followers from './components/Followers';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path='/Notification/:type/:typeId/:commentId' element={<NotificationDetail/>}/>
           <Route path='/Settings' element={<Settings/>}/>
           <Route path='/Homepage' element={<Homepage/>}/>
+          <Route path='/followers/:userId' element={<Followers/>}/>
 
           {/* other users profile page */}
           <Route path='/userProfile/:userName/:userId' element={<UserProfile/>}/>

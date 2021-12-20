@@ -34,7 +34,6 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
         e.preventDefault()
         postDetail.comments.forEach(comment=>{
             if(comment.id === commentId){
-                // console.log(comment)
                 if(comment.likes){
                     let newLikeArr = [...comment.likes]
                     newLikeArr.push(viewersId)
@@ -46,22 +45,17 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
                     setCommentLiked(true)
                 }
             }
-            console.log(comment)
         })
         firebase.database().ref(`/${postDetail.id}`).update(postDetail)
     }
     const unLikeComment=(e, commentId)=>{
-        console.log('this is to check comment likes', comment.like)
         e.preventDefault()
         postDetail.comments.forEach(comment=>{
             if(comment.id === commentId){
-                // console.log(comment)
                 if(comment.likes){
                     const filteredLikeArr=comment.likes.filter(like=>like!== viewersId) 
-                    console.log("filteredLikeArr", filteredLikeArr)
                     comment.likes=filteredLikeArr
                 }
-                console.log(comment)
                 firebase.database().ref(`/${postDetail.id}`).update(postDetail)
                 setCommentLiked(false)
             }
@@ -76,13 +70,10 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
         const dbRef = firebase.database().ref();
 
         const id = uuidv4();
-        console.log(postDetail)
         postDetail.comments.forEach(comment=>{
             if(comment.id === commentId){
-                // console.log(comment)
                 if(comment.replies){
                     const newRepliesArr = [...comment.replies]
-                    console.log('is there any replies?')
                     const currentDate = new Date();
                     const dateTime ={
                         date: currentDate.getDate(),
@@ -112,7 +103,6 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
                             whichComment: comment.id,
                             userId: comment.commenterId,
                         }
-                        console.log('replyNotificaiotn')
                         dbRef.push(replyNotificaiton);
                     }
                     newRepliesArr.push(replyObj)
@@ -148,7 +138,6 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
                             whichComment: comment.id,
                             userId: comment.commenterId,
                         }
-                        console.log('replyNotificaiotn')
                         dbRef.push(replyNotificaiton);
                     }
                     comment['replies'] = [replyObj]
@@ -160,10 +149,8 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
         setReply('')
     }
     useEffect(() => {
-        console.log('is it running?')
         // converting time to moment
         const d = new Date(`${comment.timeStamp.year}/${comment.timeStamp.month}/${comment.timeStamp.date} ${comment.timeStamp.hours}:${comment.timeStamp.minutes}:00`);
-        // console.log(moment(d).format('MMMM Do YYYY, h:mm:ss a'))
         setDatePosted(d);
         let ownersId
 
@@ -182,7 +169,6 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
         if(comment.likes){
             //has the comment be liked by viewer
             comment.likes.forEach(like=>{
-                console.log(like)
                 if(like===ownersId){
                     setCommentLiked(true)
                 }else {
@@ -191,7 +177,6 @@ function CommentCard({comment, allUsers, postDetail, viewersId}) {
             })
         }
         if(comment.replies){
-            console.log('here is the replies', comment.replies)
             setCommentReplies(comment.replies)
         }
     }, [comment])

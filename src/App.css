@@ -337,6 +337,76 @@ aside {
 }
 .plusSign i {
   position: absolute;
-  top: 40%;
-  
+  top: 38%;
+    right: 38%;
+    font-size: 1.6rem;
+}
+.followersSection{
+  background: #eeeefa;
+  padding: 30px 10px;
+  border-radius: 10px;
+}
+.allFollowers{
+  min-height: 80vh;
+  width: 80%;
+  margin: 0 auto;
+}
+.allFollowers .tabBar {
+  margin: 0 auto;
+  text-align: center;
+  margin-left: 50px;
+}
+.friendCardCntr{
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.friendCard{
+  width: 45%;
+  border: 1px solid #ae9ee785;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+  background: #f5f5fa;
+  border-radius: 10px;
+  margin: 5px auto;
+  /* align-items: center; */
+}
+.countNum{
+  text-align: center;
+  color: #ff9f00;
+  margin: 0 auto;
+}
+.friendCardTxt h4{
+  margin: 5px 0;
+}
+.friendCardTxt p{
+  color: #282c34;
+  margin: 0;
+  font-size: .9rem;
+}
+.showMoreText{
+  text-align: center;
+  margin: 0 auto;
+  align-items: center;
+}
+.followersCard{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+select{
+  border: none;
+  padding: 10px;
+  background: #ae9ee785;
+}
+.followersSection form {
+  display: flex;
+  justify-content: end;
 }

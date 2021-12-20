@@ -17,9 +17,11 @@ function NavBar(props) {
     const logOut = ()=>{
         // dbRef.child(id).remove();
         firebase.database().ref(`/sessions/${sessionId}`).remove()
+        localStorage.clear();
+        setTimeout(() => {
             navigate(`/`); 
-            localStorage.clear();
             window.location.reload(false);
+        }, 500);
     }
     const redirectTo=()=>{
         navigate(`/Homepage`);

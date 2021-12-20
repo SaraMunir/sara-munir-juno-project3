@@ -167,53 +167,55 @@ function UserProfile(props) {
     }
 
     // getting data for both users and the visitors
-    useEffect(() => {
+    useEffect(async () => {
         if(sessionId){
             let personVisitingId
             let personVisitingsEmail
-            firebase.database().ref(`/sessions/${sessionId}`).on('value', (response)=>{
-                const data = response.val();
-                let sessionData 
-                for (let key in data) {
-                    // making sure to add the id inside the object as well.
-                    const newObject = {...data[key]}
-                        // then pushing the users in the users array. 
-                        sessionData= newObject
-                }
-                setVisitorId(sessionData.userId)
-                personVisitingId=sessionData.userId
-                personVisitingsEmail=sessionData.emailAddress
-            })
             // getting the users data who's profile viewer is viewing. 
             let userData
-            firebase.database().ref(`/${userId}`).on('value', (response)=>{
+            await firebase.database().ref(`/${userId}`).on('value', async(response)=>{
                 const data = response.val();
                 userData = {...data, id: userId}
                 setUser({...data, id: userId})
+                await firebase.database().ref(`/sessions/${sessionId}`).on('value', (response)=>{
+                    const data2 = response.val();
+                    let sessionData 
+                    for (let key in data2) {
+                        // making sure to add the id inside the object as well.
+                        const newObject = {...data2[key]}
+                            // then pushing the users in the users array. 
+                            sessionData= newObject
+                    }
+                    setVisitorId(sessionData.userId)
+                    personVisitingId=sessionData.userId
+                    personVisitingsEmail=sessionData.emailAddress
+                })
                 if(data.Followers){
                     //'checking users followers list: 
                     data.Followers.map(follower=>{
-                        console.log()
                         if (follower === personVisitingId){
                             setIsPersonFollowingUser(true)
                         }
                     })
                 }
+                // getting the viewers data as well
+                firebase.database().ref().orderByChild('emailAddress').equalTo(personVisitingsEmail).on('value', (response)=>{
+                    const data = response.val();
+                    const dataArray = []
+                    for (let key in data) {
+                        // making sure to add the id inside the object as well.
+                        const newObject = {...data[key], id: key}
+                            // then pushing the users in the users array. 
+                        dataArray.push(newObject)
+                    }
+                    setVisitor(dataArray[0])
+                })
             })
-            // getting the viewers data as well
-            firebase.database().ref().orderByChild('emailAddress').equalTo(personVisitingsEmail).on('value', (response)=>{
-                const data = response.val();
-                const dataArray = []
-                for (let key in data) {
-                    // making sure to add the id inside the object as well.
-                    const newObject = {...data[key], id: key}
-                        // then pushing the users in the users array. 
-                    dataArray.push(newObject)
-                }
-                setVisitor(dataArray[0])
-            })
+
+
+
             // getting other users data to get the followers & followings objects.
-            firebase.database().ref().on('value', (response)=>{
+            await firebase.database().ref().on('value', (response)=>{
                 const data = response.val()
                 const dataArray = []
                 for (let key in data) {
@@ -238,7 +240,6 @@ function UserProfile(props) {
                 // addign the posters object to the array:
                 const editedUsersFriendsPostsArray =[]
                 usersFriendsPostsArray.forEach(friendsPost=>{
-                    // console.log('posts: ', friendsPost)
                     dataArray.forEach(other=>{
                         if(other.id === friendsPost.postersId){
                             const posterObjt = {...friendsPost, 
@@ -296,7 +297,6 @@ function UserProfile(props) {
                 setUsersFollowings(userFollowingArr)
             })
         }else {
-            console.log('no session id, so logging out')
             localStorage.clear();
             window.location.reload(false);
             navigate(`/`); 
@@ -338,6 +338,7 @@ function UserProfile(props) {
             setUserPost(sortingUserssPosts)
         })
     }, [userId])
+
 
     return (
         <>
