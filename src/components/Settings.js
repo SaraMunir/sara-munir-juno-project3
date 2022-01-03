@@ -112,7 +112,7 @@ function Settings() {
                 <div className='lineBreakSettings'></div>
                 <ul>
                     <li className='settingsItem row'>
-                        <h3 className='category testBorder settingsBox'>UserName</h3>
+                        <h3 className='category testBorder settingsBox'>Name</h3>
                         <div  className='value testBorder settingsBox'>
                             {
                                 opneNameForm ? 
@@ -123,9 +123,9 @@ function Settings() {
                                     />
                                     {userName.fullName? 
                                     userName.fullName !== userData.fullName ?
-                                    <button className='simpleBtn' >Save Password</button>
-                                    : <button className='simpleBtn diabled' disabled>Save Password</button> 
-                                    : <button className='simpleBtn diabled' disabled>Save Password</button> }
+                                    <button className='simpleBtn' >Save Name</button>
+                                    : <button className='simpleBtn diabled' disabled>Save Name</button> 
+                                    : <button className='simpleBtn diabled' disabled>Save Name</button> }
                                 </form> : 
                                 <h2>{userData.fullName}</h2>
                             }
@@ -140,7 +140,7 @@ function Settings() {
                         </button>
                     </li>
                     <li className='settingsItem row'>
-                        <h3 className='category testBorder settingsBox'>UserName</h3>
+                        <h3 className='category testBorder settingsBox'>Password</h3>
                         <div  className='value testBorder settingsBox'>
                             {
                                 opnePasswordForm ? 
