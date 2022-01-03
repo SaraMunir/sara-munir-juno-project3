@@ -60,7 +60,13 @@ function SignUp() {
             return;
         }
         // check user passwad is not empty and more than 8 
-        if( user.password === "" && user.password.length < 8) {
+        if( user.password === "") {
+            inputPassword.current.focus();
+            setAlert( { show: true, alertText: 'Please provide a password that is atleast 8 characters!' } );
+            return;
+        }
+        // check user passwad is not empty and more than 8 
+        if( user.password.length < 8) {
             inputPassword.current.focus();
             setAlert( { show: true, alertText: 'Please provide a password that is atleast 8 characters!' } );
             return;

@@ -85,9 +85,6 @@ function UploadChangeProPic(props) {
             } else {
                 uploadUrl()
             }
-
-
-
         }else {
             // providing each images a unique id
             const id = uuidv4();
