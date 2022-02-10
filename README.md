@@ -7,8 +7,6 @@ Thoughtsca
 Netlify: https://objective-heisenberg-ab7d8c.netlify.app/
 Heroku: https://thought-scape.herokuapp.com
 
-
-
 ## Installation
 
 ### `npm start`
