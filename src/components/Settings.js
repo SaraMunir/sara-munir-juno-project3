@@ -2,9 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import firebase from '../firebase';
 import NavBar from './NavBar';
 import bcrypt from 'bcryptjs'
-
-
-
 function Settings() {
     const sessionId = localStorage.sessionId;    
     const [ opneNameForm, setOpenNameForm ] = useState(false)

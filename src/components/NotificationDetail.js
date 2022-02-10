@@ -282,19 +282,9 @@ function NotificationDetail() {
                 console.log(response.val())
                 // setPost(response.val())
                 const data= response.val();
-                // let dataArray = []
-                // for(let key in data){
-                //     const newObject = {...data[key], id: key}
-                //     dataArray.push(newObject)
-                // }
                 setPost(response.val())
                 // console.log(dataArray)
                 setComments(data.comments)
-                // dataArray.map(data=>{
-                //     if(data.dataType ==="followersPost"){
-                //         setPost(data)
-                //     }
-                // })
             })
         }
     }, [])
@@ -335,27 +325,6 @@ function NotificationDetail() {
                         comments ?
                         comments.map(comment=>
                             <CommentCard  key={comment.id} comment={comment} allUsers={allUsers} postDetail={post} viewersId={userId}/>
-                            // <div key={comment.id} className='notifDetail'>
-                            //     {allUsers.map(user=>
-                            //         user.id === comment.commenterId ? 
-                            //         <div className='imageCntr'>
-                            //             <Link to={`/userProfile/${user.fullName}/${user.id}`}>
-                            //                 <img key={user.id} className="smallThmbNail" src={user.profileImg ? user.profileImg.imageUrl : 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png' } alt={`image of ${user.fullName}`} />
-                            //             </Link>
-                            //         </div>
-                            //         : null
-                            //     )}
-                            //     <div className='commentItem'>
-                            //         {allUsers.map(user=>
-                            //             user.id === comment.commenterId ? 
-                            //             <Link to={`/userProfile/${user.fullName}/${user.id}`}>
-                            //                 <h4 key={user.id}> {user.fullName }   </h4>
-                            //             </Link>
-                            //             : null
-                            //         )}
-                            //         <p> {comment.comment} </p>
-                            //     </div>
-                            // </div>
                             )
                         : null
                     }

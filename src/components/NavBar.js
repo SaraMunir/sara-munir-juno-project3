@@ -50,9 +50,7 @@ function NavBar(props) {
                         usersNotificationArr.push(notifi)
                     }
                 })
-                // console.log('usersNotificationArr', usersNotificationArr)
                 setNotifications(usersNotificationArr)
-                // console.log('usersNotification : ', usersNotification)
             })
             
         }, 500);
