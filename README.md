@@ -4,7 +4,7 @@ Welcome to Thoughtscape.
 Thoughtsca
 
 ## Live Links: 
-Netlify: https://objective-heisenberg-ab7d8c.netlify.app \
+Netlify: https://objective-heisenberg-ab7d8c.netlify.app/
 Heroku: https://thought-scape.herokuapp.com
 
 
